@@ -10,8 +10,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="outlineButtons.css">
+    <link rel="stylesheet" href="snackbar.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- WSZYSTKIE CDN ZGRAC DO FOLDERU!!! -->
     <script type="text/javascript" src="server.js"></script>
     <script type="text/javascript" src="main.js"></script>
 
@@ -21,30 +24,175 @@
     <![endif]-->
   </head>
   <body>
-    <div class="container-fluid">
+    <!-- MAIN MENU  -->
+    <div id="mainMenu" class="container-fluid hide">
       <div class="row">
-        <div class="oneQuarter" id="srodek">
-          <img id="Kappa" style="width: 195px; height: 214px" src="logo1lo.png" class="" alt="Kappa" />
+        <div class="oneQuarter" id="srodek"> <!-- 195x214 -->
+          <img id="Kappa" style="width:195; height: 214px;" src="logo1lo.png" class="" alt="Kappa" />
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6 text-center first oneQuarter">
-          Quiz
+        <div class="col-md-6 mainMenuSelector1st oneQuarter underConstruction">
+          <div class="mainMenuSelectorText">Quiz</div>
         </div>
-        <div class="col-md-6 text-center second oneQuarter">
-          Głosowanie
+        <div class="col-md-6 mainMenuSelector2nd oneQuarter">
+          <div class="mainMenuSelectorText">Głosowanie</div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6 text-center third oneQuarter">
-          Pytania
+        <div class="col-md-6 mainMenuSelector3rd oneQuarter">
+          <div class="mainMenuSelectorText">Pytania</div>
         </div>
-        <div class="col-md-6 text-center fourth oneQuarter">
-          Ustawienia
+        <div class="col-md-6 mainMenuSelector4th oneQuarter underConstruction">
+          <div class="mainMenuSelectorText">Ustawienia</div>
         </div>
       </div>
     </div>
 
+    <!-- SUB MENUS -->
+
+    <!-- <div id="Quiz" class="container-fluid hide"></div> -->
+
+    <!-- STYLE TYLKO DLA TESTOW -->
+    <div id="Głosowanie" class="container-fluid text-center hide" style = "background-color: #6282f2;">
+    <!-- STYLE TYLKO DLA TESTOW -->
+      <h1 style="font-size:1.7em">Pytanie 1</h1>
+      <div class="questionBox container">
+        Tutaj znajduje sie pytanie?
+      </div>
+      <div class="answersBox">
+        <div class="row text-center">
+          <div class="answerBoxAnswer container col-md-4 col-md-offset-1">1) Odpowiedz 1</div>
+          <div class="answerBoxAnswer container col-md-4 col-md-offset-2">2) Odpowiedz 2 z dwoma
+          linijkami</div>
+        </div>
+        <div class="row">
+          <div class="answerBoxAnswer container col-md-4 col-md-offset-1">3) Odp 3</div>
+          <div class="answerBoxAnswer container col-md-4 col-md-offset-2">4) Odp 4</div>
+        </div>
+      </div>
+      <div class="timer text-center">
+        <!-- Timer is here -->
+      </div>
+    </div>
+
+    <!-- STYLE TYLKO DLA TESTOW -->
+    <div id="Pytania" class="container-fluid text-center" style="background-color: #3b64f2;">
+      <!-- STYLE TYLKO DLA TESTOW -->
+      <div id="createQuestionList" class="flexBox">
+        <div id="mainBoxCreateQuestionList" class="container">
+          <div id="chooseBoxCreateQuestionList">
+            <button id="addQuestionList" class="btn btn-pytanie btn-block btn-lg">Stwórz nową listę pytań</button>
+            <button id="importQuestionList" class="btn btn-pytanie btn-block btn-lg">Importuj listę pytań</button>
+          </div>
+          <div id="addBoxCreateQuestionList" class="hide">
+            Wprowadź nazwę listy pytań<br />
+            <input id="questionListName" type="text" class="text-center" placeholder="Nazwa listy"><br><br>
+            <button id="submitQuestionList" type="button" class="btn btn-pytanie btn-block btn-lg">Stwórz</button>
+            <button id="returnToChooseBoxQuestionList" type="button" class="btn btn-pytanie btn-block btn-lg">Wróć</button>
+          </div>
+          <hr>
+          <button id="pytaniaReturnToMainMenu" class="btn btn-pytanie btn-block btn-lg">Wróć do menu głównego</button>
+        </div>
+      </div>
+
+      <div class="menuQuestions container flexBox hide">
+        <!-- BR W FLEXBOXIE DZIALAJ JAK SPACJE! -->
+        PYTANIA: <br><span id="iloscPytan">0</span>
+        <div class="container">
+          <button id="dodajPytanie" type="button" class="btn btn-pytanie btn-block btn-lg"><span class="glyphicon glyphicon-plus"></span></button>
+          <button type="button" class="btn btn-pytanie btn-block btn-lg"><span class="glyphicon glyphicon-import"></span></button>
+        </div>
+        <!-- <div class="container">
+          <div class="btn-group btn-group-lg btn-group-justified"> -->
+            <!-- <div class="btn-group">
+              <button id="dodajPytanie" type="button" class="btn btn-lg btnSpidi" data-toggle="modal" data-target="#addQuestionModal"><span class="glyphicon glyphicon-plus"></span></button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-lg btnSpidi"><span class="glyphicon glyphicon-import"></span></button>
+            </div> -->
+            <!-- <div class="btn-group">
+              <button type="button" class="btn btn-lg btn-outline btn-default"><span class="glyphicon glyphicon-import"></span></button>
+            </div> -->
+          <!-- </div>
+        </div> -->
+      </div>
+
+    </div>
+
+    <!-- <div id="Ustawienia" class="container-fluid hide"></div> -->
+
+    <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+      <div class="modal-dialog modal-lg text-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+            <h1 class="modal-title" id="">Dodaj Pytanie</h1>
+          </div>
+          <div class="modal-body">
+            <h3>Pytanie:</h3>
+            <textarea id="pytanieTextarea" rows="1" cols="40"></textarea>
+            <br>
+            <h3>Odpowiedź 1:</h3>
+            <textarea id="odpowiedzTextarea1" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <br>
+            <h3>Odpowiedź 2:</h3>
+            <textarea id="odpowiedzTextarea2" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <br>
+            <h3>Odpowiedź 3:</h3>
+            <textarea id="odpowiedzTextarea3" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <br>
+            <h3>Odpowiedź 4:</h3>
+            <textarea id="odpowiedzTextarea4" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <br>
+            <h3>Poprawna odpowiedź:</h3>
+            <div class="row">
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="1">Odpowiedź 1</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="2">Odpowiedź 2</label>
+            </div>
+            <div class="row">
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3">Odpowiedź 3</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4">Odpowiedź 4</label>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-info btn-block btn-lg" onclick="createQuestion();">ZAPISZ</button>
+              <button type="button" class="btn btn-primary btn-block btn-lg" data-dismiss="modal">PRZERWIJ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importQuestionModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+      <div class="modal-dialog modal-lg text-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h1 class="modal-title" id="">Wczytywanie list z pytaniami</h1>
+          </div>
+          <div class="modal-body">
+            <!-- <div class="form-group"> -->
+            <h3>Wybierz listę z pytaniami:</h3>
+            <select id="importQuestionSelectList" class="text-center">
+              <option>Dank?</option>
+              <option>More dank?</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+
+
+      <!-- </div> -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="snackbar"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

@@ -1,10 +1,26 @@
- @import url('https://fonts.googleapis.com/css?family=Bungee');
+@import url('https://fonts.googleapis.com/css?family=Bungee');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+@import url('https://fonts.googleapis.com/css?family=Russo+One');
 
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Bungee', cursive;
+  color: #fff;
+  overflow: hidden; /*Usuwa scrollbar*/
+  /* smieszki */
+  background: url("Kappa.png");
+  background-color: #301f2f;
+  white-space: normal;
+}
+input {
+  color: #000;
+}
+
+.btn, input {
+  outline: none !important;
 }
 
 .container-fluid {
@@ -16,7 +32,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Bungee', cursive;
   font-size: 5.5em;
 }
 
@@ -24,17 +39,21 @@ body {
   height: 50vh;
 }
 
-.first {
-  background-color: #ff6300;
+.mainMenuSelector1st {
+  /*background-color: #ff6300;*/
+  background-color: #8fa5f1;
 }
-.second {
-  background-color: #e04200;
+.mainMenuSelector2nd {
+  /*background-color: #e04200;*/
+  background-color: #6282f2;
 }
-.third {
-  background-color: #dd2100;
+.mainMenuSelector3rd {
+  /*background-color: #dd2100;*/
+  background-color: #3b64f2;
 }
-.fourth {
-  background-color: #cf1000;
+.mainMenuSelector4th {
+  /*background-color: #cf1000;*/
+  background-color: #1849f2;
 }
 #srodek {
   margin: 0;
@@ -43,4 +62,134 @@ body {
   z-index: 1;
   width: 100vw;
   height: 100vh;
+}
+.mainMenuSelectorText {
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+  width: 100% !important;
+  padding 0;
+  margin: 0;
+}
+.mainMenuSelectorText:hover {
+  color: #000f75;
+  cursor: pointer;
+}
+.col-md-6 {
+  padding: 0 !important;
+}
+.underConstruction {
+  background-image: url("underConstruction.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.underConstruction > div {
+  display: none;
+}
+
+/* GŁOSOWANIE */
+#Głosowanie {
+  font-size: 4em;
+}
+.questionBox {
+  margin-top: 30px;
+  border: 12px solid #fff;
+  border-radius: 12px;
+  height: auto;
+}
+.answersBox {
+  margin-top: 50px;
+}
+.answerBoxAnswer {
+  margin-top: 40px;
+  border: 12px solid #fff;
+  border-radius: 12px;
+  height: auto;
+}
+.timer {
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+}
+
+/* Pytania */
+#Pytania {
+  font-size: 4em;
+}
+.menuQuestions {
+  font-family: 'Russo One', sans-serif;
+  border: 12px solid #fff;
+  border-radius: 12px;
+  margin-top: 30px;
+  font-size: 0.7em;
+  padding: 15px;
+  width: auto;
+}
+#iloscPytan {
+  width: 7vw;
+}
+.flexBox {
+  display: flex;
+  justify-content: space-between;;
+  align-items: center;
+}
+.menuQuestions div .btn{
+  /*width: 50%;*/
+  font-size: 0.7em;
+}
+#addQuestionModal, #importQuestionModal {
+  font-family: 'Josefin Sans', sans-serif;
+  color: #000;
+  font-size: 1.5em;
+}
+.modal-title, .modal-footer, .modal-body > h3 {
+  font-family: 'Russo One', sans-serif;
+}
+.modal-body > select, .modal-body > select > option {
+  height: auto;
+  width: auto;
+  font-family: 'Russo One', sans-serif;
+  font-size: 1.3em;
+  size: 4;
+}
+.wtf {
+  font-size: 5em !important;
+}
+.odpowiedzTextarea {
+  font-size: 1em;
+}
+.correctAnswerRadio {
+  font-weight: 400;
+  font-size: 1em;
+  margin: 0 10px;
+}
+.btn.btn-pytanie, .btn-pytanie {
+  background-color: #fff;
+  color: #3b64f2;
+  border: 3px solid #fff;
+}
+.btn.btn-pytanie:hover, .btn-pytanie:hover {
+  background-color: #3b64f2;
+  color: #fff;
+  border: 3px solid #fff;
+}
+#createQuestionList {
+  font-family: 'Russo One', sans-serif;
+  width: 100vw;
+  height: 100vh;
+}
+#mainBoxCreateQuestionList {
+  border: 12px solid #fff;
+  border-radius: 12px;
+  padding: 30px;
+}
+#mainBoxCreateQuestionList > .btn, #mainBoxCreateQuestionList > div > .btn {
+  font-size: 0.7em;
+}
+#addBoxCreateQuestionList > input {
+  font-size: 0.7em;
+  border-radius: 6px;
+  color: #3b64f2;
 }
