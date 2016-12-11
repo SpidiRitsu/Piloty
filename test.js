@@ -1,70 +1,136 @@
 module.exports = function() {
-var io
-function main() {
-	var express = require("express")
-	var app = express()
-	var server = require("http").Server(app)
-	io = require("socket.io")(server)
-	var opn = require("opn")
+var io;
+var fs = require("fs");
+function readQuestions() {
+	var questions = {};
+	fs.readdir(__dirname+"/Saves", function (err, files) {
+		if (err) return console.log(err);
+		files.forEach(function(file) {
+			console.log(file);
+			questions[file.slice(0,file.length-4)] = fs.readFileSync(__dirname+"/Saves/"+file, "utf-8").split("\r\n"); //ZMIENIC NA LINUXIE NA \n
+		});
+		console.log(questions);
+	});
+}
 
-	app.use(express.static(__dirname+"/Public"))
+/* -- WLASCIWE FUNKCJE -- */
+
+function appendQuestion(fileName, question) {
+  fs.appendFile(__dirname+"/Saves/"+fileName+".txt", question, 'utf-8', function (err) {
+    if (err) return console.error(err);
+    // console.log("appending "+fileName);
+  });
+}
+
+function checkIfFileExists(fileToCheck) {
+  var result = false;
+  fileToCheck = fileToCheck + ".txt";
+  var files = fs.readdirSync(__dirname+"/Saves");
+  // console.log(files);
+  files.forEach(function(file) {
+    if(file === fileToCheck)
+      result = true;
+  });
+  return result;
+}
+
+
+function main() {
+	var express = require("express");
+	var app = express();
+	var server = require("http").Server(app);
+	io = require("socket.io")(server);
+	var opn = require("opn");
+  var bodyParser = require("body-parser");
+
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
+	app.use(express.static(__dirname+"/Public"));
 
 	app.get("/", function (req,res) {
-		res.sendFile(__dirname+"/Public/indexTest.html")
-	})
-	io.on("connection", function(socket) {
-		console.log("someone connected")
-		setInterval(function() {
-			io.emit("first emit", Math.random().toFixed(2))
-		},1000)
-		socket.on("disconnect", function() {
-			console.log("someone DISCONNECTED")
-		})
-	})
+		res.sendFile(__dirname+"/Public/indexTest.html");
+	});
 
-	server.listen(process.env.PORT || 3000, "localhost")
+  app.post("/createQuestion", function(req,res) {
+    var question = req.body.question;
+    // console.log(req.body);
+    // console.log(req.body.question);
+    console.log(question);
+    appendQuestion(question);
+    res.writeHead(200, {"Content-Type": "application/json"});
+    res.json(question);
+    res.end();
+  });
+
+  app.post("/submitQuestionList", function(req,res) {
+    var questionListName = req.body.listName;
+    console.log(questionListName);
+    res.writeHead(200, {"Content-Type": "text/plain"});
+    if (checkIfFileExists(questionListName)) {
+      res.end("true");
+    }
+    else {
+      appendQuestion(questionListName, "");
+      res.end("false");
+    }
+  });
+
+	io.on("connection", function(socket) {
+		console.log("someone connected");
+		setInterval(function() {
+			io.emit("first emit", Math.random().toFixed(2));
+		},1000);
+		socket.on("disconnect", function() {
+			console.log("someone DISCONNECTED");
+		});
+	});
+
+
+	// readQuestions();
+	server.listen(process.env.PORT || 3000, "localhost");
 	if(process.env.PORT===undefined)
-		console.log("listening on port 3000")
+		console.log("listening on port 3000");
 	else
-		console.log("listening on port " + process.env.PORT)
+		console.log("listening on port " + process.env.PORT);
 	if(process.argv[2]==="open") {
 		if(process.env.PORT===undefined)
-			opn("http://localhost:3000")
+			opn("http://localhost:3000");
 		else
-			opn("http://localhost:"+process.env.PORT)
+			opn("http://localhost:"+process.env.PORT);
 	}
 
-	var usb = require("usb")
+	var usb = require("usb");
 	//var mouse = require("./mouse.js")(2,5)
-	usb.setDebugLevel(0)
+	usb.setDebugLevel(0);
 
-	var myUsb = usb.findByIds(312,312)
+	var myUsb = usb.findByIds(312,312);
 	if(!myUsb)
-		return console.log("NO DEVICE!!!!")
-	var i=0
+		return console.log("NO DEVICE!!!!");
+	var i=0;
 
-	myUsb.open()
-	myUsb.interface().claim()
-	poll(myUsb,i,io)
+	myUsb.open();
+	myUsb.interface().claim();
+	poll(myUsb,i,io);
 }
 
 function poll(device, counter, server) {
-	counter++
+	counter++;
 	//console.log("\n\n["+counter+"] Waiting for a poll. . .")
 	device.interface().endpoint(129).transfer(64,function(err,data) {
-		if (err) return console.error(err)
-		data = data.toString('hex')
+		if (err) return console.error(err);
+		data = data.toString('hex');
 		if(data.slice(0,12) == "032800000000") {
 			//console.log("~~ IGNORING THIS LINE!")
 		}
 		else {
 		//console.log(data)
-		console.log("["+counter+"]------------------------------------------")
-		parseData(data, server)
+		console.log("["+counter+"]------------------------------------------");
+		parseData(data, server);
 		}
 		//console.log("------------------------------------------")
-		poll(device, counter)
-	})
+		poll(device, counter);
+	});
 }
 
 function parseData(data, server) {
@@ -82,40 +148,40 @@ function parseData(data, server) {
 		"05": "/",
 		"11": ".",
 		"06": "-"
-	}
+	};
 	var pilot = {
 		Header: data.slice(0,8),
 		Id: undefined
-	}
-	data = data.slice(8)
-	data = data.match(/.{1,2}/g)
+	};
+	data = data.slice(8);
+	data = data.match(/.{1,2}/g);
 	data = data.filter(function(item) {
-		return item !== "00"
-	})
-	pilot.Id = data.shift() + data.shift()
-	console.log("Header: "+pilot.Header)
-	console.log("ID: "+pilot.Id)
-	console.log(data)
-	var translatedData = []
+		return item !== "00";
+	});
+	pilot.Id = data.shift() + data.shift();
+	console.log("Header: "+pilot.Header);
+	console.log("ID: "+pilot.Id);
+	console.log(data);
+	var translatedData = [];
 	for(var key in encryptionData) {
 		for(var i=0; i<data.length; i++) {
 			if(key === data[i])
-				translatedData[i] = encryptionData[key]
+				translatedData[i] = encryptionData[key];
 		}
 	}
 	if(translatedData.length !== 0 && pilot.Header === "03280000") {
-		console.log("Code sent: "+translatedData.join(''))
-io.emit("emit", pilot.Id, translatedData.join(''))
+		console.log("Code sent: "+translatedData.join(''));
+io.emit("emit", pilot.Id, translatedData.join(''));
 	}
-	console.log(data.join(''))
-	var codeKappa = data.join('')
+	console.log(data.join(''));
+	var codeKappa = data.join('');
 	if(codeKappa=="2006" || codeKappa=='2005') {
-		io.emit("kappa", codeKappa)
+		io.emit("kappa", codeKappa);
 
 	}
-	var mouse = require("./mouse.js")
-	mouse(1,5,data)
+	var mouse = require("./mouse.js");
+	mouse(1,5,data);
 }
 
-main()
-}
+main();
+};
