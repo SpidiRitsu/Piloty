@@ -1,0 +1,4 @@
+Troche tekstu\n
+wiecej tekstu
+kolejna linia
+moze bd dzialac

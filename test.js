@@ -1,6 +1,7 @@
 module.exports = function() {
 var io;
 var fs = require("fs");
+var path = require("path");
 function readQuestions() {
 	var questions = {};
 	fs.readdir(__dirname+"/Saves", function (err, files) {
@@ -34,6 +35,20 @@ function checkIfFileExists(fileToCheck) {
   return result;
 }
 
+function loadQuestionsFromFiles() {
+	var json = {};
+	var files = fs.readdirSync(__dirname+"/Saves");
+	files.forEach(function(file) {
+		var extname = path.extname(file);
+		if(extname === ".txt") {
+			var content = fs.readFileSync(__dirname+"/Saves/"+file, "utf-8");
+			// console.log(file + ": "+content);
+			json[file] = content;
+		}
+	});
+	// console.log(json);
+	return json;
+}
 
 function main() {
 	var express = require("express");
@@ -75,6 +90,13 @@ function main() {
       res.end("false");
     }
   });
+
+	app.post("/loadQuestionsFromFiles", function (req, res) {
+		var json = loadQuestionsFromFiles();
+		// console.log(myJson);
+		res.json(json);
+		res.end();
+	});
 
 	io.on("connection", function(socket) {
 		console.log("someone connected");

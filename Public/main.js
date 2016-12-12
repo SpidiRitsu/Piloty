@@ -1,11 +1,13 @@
 var timerId;
 var snackbarTimerId;
+var filesWithContent;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
   $("#submitQuestionList").attr("disabled",false);
   //TO POWYZEJ DO NAPRAWY BUGA W FIREFOXIE!
   //SPRAWDZIC CZY BUG TEN DZIALA W SZKOLE!: PODCZAS WYSWIETLANIA SNACKBARRA Z ERROREM ODSWIEEZYC STRONE!
+  loadQuestionsFromFiles(); //laduje pliki z pytaniami do zmiennej i przypina do listy
   $(".btn").click(function() {
     $(this).blur();
   });
@@ -86,6 +88,20 @@ $(document).ready(function() {
   $("#importQuestionList").click(function() {
     $("#importQuestionModal").modal({backdrop: "static"});
   });
+  $("#loadSelectedQuestionList").click(function() {
+    var selected = $("#importQuestionSelectList").find(":selected").text();
+    console.log(selected);
+    // Wczytanie:
+    $("#createQuestionList").fadeOut(500);
+    $("#mainMenuQuestions").fadeOut(1);
+    setTimeout(function() {
+      $("#createQuestionList").addClass("hide").fadeIn(1);
+      $("#mainMenuQuestionsWrapper").removeClass("hide").fadeIn(1);
+      setTimeout(function() {
+        $("#mainMenuQuestions").fadeIn(500);
+      }, 200);
+    }, 500);
+  });
 
 
 });
@@ -107,8 +123,16 @@ function createQuestion() {
   });
 }
 
-function loadImportQuestionSelectList() {
-  //TO ZACZAC ROBIC!!!!
+function loadQuestionsFromFiles() {
+  $.post("/loadQuestionsFromFiles", function(json) {
+    filesWithContent = json;
+    console.log(filesWithContent);
+    for(key in filesWithContent) {
+      $("#importQuestionSelectList").append(
+        "<option>"+key.slice(0,-4)+"</option"
+      );
+    }
+  });
 }
 
 function timer(duration) {
