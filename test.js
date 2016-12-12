@@ -69,12 +69,13 @@ function main() {
 
   app.post("/createQuestion", function(req,res) {
     var question = req.body.question;
+    var file = req.body.file;
     // console.log(req.body);
     // console.log(req.body.question);
-    console.log(question);
-    appendQuestion(question);
-    res.writeHead(200, {"Content-Type": "application/json"});
-    res.json(question);
+    console.log(file, question);
+    appendQuestion(file, question);
+    // res.writeHead(200, {"Content-Type": "application/json"});
+    // res.json(question);
     res.end();
   });
 

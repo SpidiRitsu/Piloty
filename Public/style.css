@@ -19,7 +19,7 @@ input {
   color: #000;
 }
 
-.btn, input {
+.btn, input, a {
   outline: none !important;
 }
 
@@ -132,10 +132,10 @@ input {
 }
 .flexBox {
   display: flex;
-  justify-content: space-between;;
+  justify-content: center;
   align-items: center;
 }
-.menuQuestions div .btn{
+.menuQuestions > div > .btn{
   /*width: 50%;*/
   font-size: 0.7em;
 }
@@ -173,7 +173,9 @@ input {
 }
 #createQuestionList {
   font-family: 'Russo One', sans-serif;
-  width: 100vw;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   height: 100vh;
 }
 #mainBoxCreateQuestionList {
@@ -188,4 +190,23 @@ input {
   font-size: 0.7em;
   border-radius: 6px;
   color: #3b64f2;
+}
+#accordionBox {
+  border: 12px solid #fff;
+  border-radius: 12px;
+  margin: 30px auto;
+  max-height: 60vh;
+  overflow: auto;
+}
+#questionsAccordion{
+  width: 100% !important;
+  margin: 15px;
+  color: #000;
+}
+#questionsAccordion > div > .panel-collapse > .panel-body {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.7em;
+}
+.headerForThingsInAccordion {
+  font-family: 'Russo One', sans-serif;
 }

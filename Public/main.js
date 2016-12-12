@@ -1,6 +1,7 @@
 var timerId;
 var snackbarTimerId;
 var filesWithContent;
+var selectedFile;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -72,6 +73,7 @@ $(document).ready(function() {
       }
       else if(response==="false") {
         showSnackbar("Plik z listą pytań został pomyślnie utworzony!", 3, $("#submitQuestionList"), "green");
+        loadQuestionsFromFiles();
       }
     });
   });
@@ -86,11 +88,27 @@ $(document).ready(function() {
     }, 500);
   });
   $("#importQuestionList").click(function() {
-    $("#importQuestionModal").modal({backdrop: "static"});
+    if(filesWithContent === false) {
+      showSnackbar("Brak plików w lokalizacji! Stwórz jakiś!", 3, $("#importQuestionList"), "red");
+    }
+    else {
+      $("#importQuestionModal").modal({backdrop: "static"});
+    }
   });
   $("#loadSelectedQuestionList").click(function() {
     var selected = $("#importQuestionSelectList").find(":selected").text();
     console.log(selected);
+    selectedFile = {};
+    selectedFile[selected] =  filesWithContent[selected+".txt"];
+    console.log(selectedFile);
+    var splittedContent = selectedFile[Object.keys(selectedFile)[0]].split("\n");
+    console.log(splittedContent);
+    //Appending:
+    for(var i=0; i<splittedContent.length-1; i++) {
+      $("#questionsAccordion").append(
+        '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#questionsAccordion" href="#collapse'+i+'">Pytanie '+(i+1)+'</a></h4></div><div id="collapse'+i+'" class="panel-collapse collapse"><div class="panel-body">'+splittedContent[i]+'</div></div></div>');
+    }
+
     // Wczytanie:
     $("#createQuestionList").fadeOut(500);
     $("#mainMenuQuestions").fadeOut(1);
@@ -115,8 +133,9 @@ function createQuestion() {
     $("#odpowiedzTextarea4").val()+"{||}"+
     $("input[name=correctAnswer]:checked").val()+"{||}";
   wholeQuestion = wholeQuestion.replace(/\n/g, "{-}") + "\n";
+  var file = Object.keys(selectedFile)[0];
   console.log(wholeQuestion);
-  $.post("/createQuestion", {question: wholeQuestion}, function(data) {
+  $.post("/createQuestion", {file: file, question: wholeQuestion}, function(data) {
     // alert(json);
     console.log(data);
     // console.log(something);
@@ -125,12 +144,19 @@ function createQuestion() {
 
 function loadQuestionsFromFiles() {
   $.post("/loadQuestionsFromFiles", function(json) {
-    filesWithContent = json;
-    console.log(filesWithContent);
-    for(key in filesWithContent) {
-      $("#importQuestionSelectList").append(
-        "<option>"+key.slice(0,-4)+"</option"
-      );
+    if(!jQuery.isEmptyObject(json)) {
+      filesWithContent = json;
+      console.log(filesWithContent);
+      console.log(filesWithContent["Historia.txt"].split("\n").length-1);
+      for(var key in filesWithContent) {
+        console.log(key);
+        $("#importQuestionSelectList").append(
+          "<option>"+key.slice(0,-4)+"</option>"
+        );
+      }
+    }
+    else {
+      filesWithContent = false;
     }
   });
 }

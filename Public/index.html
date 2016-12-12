@@ -79,7 +79,7 @@
     <!-- STYLE TYLKO DLA TESTOW -->
     <div id="Pytania" class="container-fluid text-center" style="background-color: #3b64f2;">
       <!-- STYLE TYLKO DLA TESTOW -->
-      <div id="createQuestionList" class="flexBox">
+      <div id="createQuestionList" class="flexBox hide">
         <div id="mainBoxCreateQuestionList" class="container">
           <div id="chooseBoxCreateQuestionList">
             <button id="addQuestionList" class="btn btn-pytanie btn-block btn-lg">Stwórz nową listę pytań</button>
@@ -96,30 +96,77 @@
         </div>
       </div>
 
-      <div id="mainMenuQuestionsWrapper" class="hide">
+      <div id="mainMenuQuestionsWrapper" class="">
         <div id="mainMenuQuestions" class="menuQuestions container flexBox">
           <!-- BR W FLEXBOXIE DZIALAJ JAK SPACJE! -->
           PYTANIA: <br><span id="iloscPytan">0</span>
           <div class="container">
-            <button id="dodajPytanie" type="button" class="btn btn-pytanie btn-block btn-lg"><span class="glyphicon glyphicon-plus"></span></button>
-            <button type="button" class="btn btn-pytanie btn-block btn-lg"><span class="glyphicon glyphicon-import"></span></button>
+            <button id="dodajPytanie" type="button" class="btn btn-pytanie btn-block btn-lg">Dodaj pytanie</button>
+            <button type="button" class="btn btn-pytanie btn-block btn-lg">Wróć</button>
           </div>
           <!-- <div class="container">
           <div class="btn-group btn-group-lg btn-group-justified"> -->
           <!-- <div class="btn-group">
           <button id="dodajPytanie" type="button" class="btn btn-lg btnSpidi" data-toggle="modal" data-target="#addQuestionModal"><span class="glyphicon glyphicon-plus"></span></button>
+          </div>
+          <div class="btn-group">
+          <button type="button" class="btn btn-lg btnSpidi"><span class="glyphicon glyphicon-import"></span></button>
+          </div> -->
+          <!-- <div class="btn-group">
+          <button type="button" class="btn btn-lg btn-outline btn-default"><span class="glyphicon glyphicon-import"></span></button>
+          </div> -->
+          <!-- </div>
+          </div> -->
         </div>
-        <div class="btn-group">
-        <button type="button" class="btn btn-lg btnSpidi"><span class="glyphicon glyphicon-import"></span></button>
-      </div> -->
-      <!-- <div class="btn-group">
-      <button type="button" class="btn btn-lg btn-outline btn-default"><span class="glyphicon glyphicon-import"></span></button>
-    </div> -->
-    <!-- </div>
-  </div> -->
-</div>
-      </div>
 
+        <div id="accordionBox" class="container flexBox text-center">
+          <div class="panel-group" id="questionsAccordion">
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>
+                </h4>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6 text-center">
+                      <span class="headerForThingsInAccordion">Pytanie</span>
+                      <textarea rows="4" cols="15"></textarea>
+                      <span class="headerForThingsInAccordion">Poprawna odpowiedź</span>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="1">Odpowiedź 1</label>
+                      <br>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="2">Odpowiedź 2</label>
+                      <br>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3">Odpowiedź 3</label>
+                      <br>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4">Odpowiedź 4</label>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="headerForThingsInAccordion">Odpowiedź 1</span>
+                      <textarea rows="1" cols="15"></textarea>
+                      <span class="headerForThingsInAccordion">Odpowiedź 2</span>
+                      <textarea rows="1" cols="15"></textarea>
+                      <span class="headerForThingsInAccordion">Odpowiedź 3</span>
+                      <textarea rows="1" cols="15"></textarea>
+                      <span class="headerForThingsInAccordion">Odpowiedź 4</span>
+                      <textarea rows="1" cols="15"></textarea>
+                    </div>
+                    <div class="col-md-12">
+                      <br>
+                      <button type="button" class="btn btn-default btn-block btn-lg">Wat</button>
+                      <button type="button" class="btn btn-default btn-block btn-lg">Wat</button>
+                      <!-- <button type="button" class="btn btn-default btn-block btn-lg">Wat</button> -->
+                      <!-- <button type="button" class="btn btn-default btn-block btn-lg">Wat</button> -->
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- <div id="Ustawienia" class="container-fluid hide"></div> -->
@@ -155,7 +202,6 @@
             <div class="row">
               <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3">Odpowiedź 3</label>
               <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4">Odpowiedź 4</label>
-
             </div>
           </div>
           <div class="modal-footer">
