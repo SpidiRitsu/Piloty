@@ -25,7 +25,7 @@
   </head>
   <body>
     <!-- MAIN MENU  -->
-    <div id="mainMenu" class="container-fluid hide">
+    <div id="mainMenu" class="container-fluid">
       <div class="row">
         <div class="oneQuarter" id="srodek"> <!-- 195x214 -->
           <img id="Kappa" style="width:195; height: 214px;" src="logo1lo.png" class="" alt="Kappa" />
@@ -33,10 +33,10 @@
       </div>
       <div class="row">
         <div class="col-md-6 mainMenuSelector1st oneQuarter underConstruction">
-          <div class="mainMenuSelectorText">Quiz</div>
+          <div class="mainMenuSelectorText">Quiz ten tego no tu zrobic cos innego</div>
         </div>
         <div class="col-md-6 mainMenuSelector2nd oneQuarter">
-          <div class="mainMenuSelectorText">Głosowanie</div>
+          <div class="mainMenuSelectorText">Quiz</div>
         </div>
       </div>
       <div class="row">
@@ -54,7 +54,8 @@
     <!-- <div id="Quiz" class="container-fluid hide"></div> -->
 
     <!-- STYLE TYLKO DLA TESTOW -->
-    <div id="Głosowanie" class="container-fluid text-center hide" style = "background-color: #6282f2;">
+    <!-- Tu bylo glosowanie -->
+    <div id="Quiz" class="container-fluid text-center hide" style = "background-color: #6282f2;">
     <!-- STYLE TYLKO DLA TESTOW -->
       <h1 style="font-size:1.7em">Pytanie 1</h1>
       <div class="questionBox container">
@@ -77,9 +78,9 @@
     </div>
 
     <!-- STYLE TYLKO DLA TESTOW -->
-    <div id="Pytania" class="container-fluid text-center" style="background-color: #3b64f2;">
+    <div id="Pytania" class="container-fluid text-center hide" style="background-color: #3b64f2;">
       <!-- STYLE TYLKO DLA TESTOW -->
-      <div id="createQuestionList" class="flexBox hide">
+      <div id="createQuestionList" class="flexBox">
         <div id="mainBoxCreateQuestionList" class="container">
           <div id="chooseBoxCreateQuestionList">
             <button id="addQuestionList" class="btn btn-pytanie btn-block btn-lg">Stwórz nową listę pytań</button>
@@ -96,7 +97,7 @@
         </div>
       </div>
 
-      <div id="mainMenuQuestionsWrapper" class="">
+      <div id="mainMenuQuestionsWrapper" class="hide">
         <div id="mainMenuQuestions" class="menuQuestions container flexBox">
           <!-- BR W FLEXBOXIE DZIALAJ JAK SPACJE! -->
           PYTANIA: <br><span id="iloscPytan">0</span>
@@ -119,7 +120,7 @@
           </div> -->
         </div>
 
-        <div id="accordionBox" class="container flexBox text-center">
+        <div id="accordionBox" class="container flexBox text-center hide">
           <div class="panel-group" id="questionsAccordion">
             <div class="panel panel-info">
               <div class="panel-heading">
@@ -129,37 +130,36 @@
               </div>
               <div id="collapse1" class="panel-collapse collapse in">
                 <div class="panel-body">
-                  <div class="row">
+                  <div class="row disabledDiv">
                     <div class="col-md-6 text-center">
                       <span class="headerForThingsInAccordion">Pytanie</span>
-                      <textarea rows="4" cols="15"></textarea>
+                      <textarea autocomplete="off"  rows="4" cols="15"></textarea>
                       <span class="headerForThingsInAccordion">Poprawna odpowiedź</span>
-                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="1">Odpowiedź 1</label>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswerAccordion" value="1"> Odpowiedź 1</label>
                       <br>
-                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="2">Odpowiedź 2</label>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswerAccordion" value="2"> Odpowiedź 2</label>
                       <br>
-                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3">Odpowiedź 3</label>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswerAccordion" value="3"> Odpowiedź 3</label>
                       <br>
-                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4">Odpowiedź 4</label>
+                      <label class="correctAnswerRadio"><input type="radio" name="correctAnswerAccordion" value="4"> Odpowiedź 4</label>
                     </div>
                     <div class="col-md-6">
                       <span class="headerForThingsInAccordion">Odpowiedź 1</span>
-                      <textarea rows="1" cols="15"></textarea>
+                      <textarea autocomplete="off"  rows="1" cols="15"></textarea>
                       <span class="headerForThingsInAccordion">Odpowiedź 2</span>
-                      <textarea rows="1" cols="15"></textarea>
+                      <textarea autocomplete="off"  rows="1" cols="15"></textarea>
                       <span class="headerForThingsInAccordion">Odpowiedź 3</span>
-                      <textarea rows="1" cols="15"></textarea>
+                      <textarea autocomplete="off"  rows="1" cols="15"></textarea>
                       <span class="headerForThingsInAccordion">Odpowiedź 4</span>
-                      <textarea rows="1" cols="15"></textarea>
+                      <textarea autocomplete="off"  rows="1" cols="15"></textarea>
                     </div>
-                    <div class="col-md-12">
-                      <br>
-                      <button type="button" class="btn btn-default btn-block btn-lg">Wat</button>
-                      <button type="button" class="btn btn-default btn-block btn-lg">Wat</button>
-                      <!-- <button type="button" class="btn btn-default btn-block btn-lg">Wat</button> -->
-                      <!-- <button type="button" class="btn btn-default btn-block btn-lg">Wat</button> -->
-
-                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <br>
+                    <button type="button" class="btn btn-default btn-block btn-lg btn-info russoOne editBtn">Edytuj pytanie</button>
+                    <button type="button" class="btn btn-default btn-block btn-lg btn-success russoOne hide">Zapisz</button>
+                    <button type="button" class="btn btn-default btn-block btn-lg btn-danger russoOne">Usuń pytanie</button>
+                    <button type="button" class="btn btn-default btn-block btn-lg btn-primary russoOne hide">Anuluj</button>
                   </div>
                 </div>
               </div>
@@ -180,28 +180,28 @@
           </div>
           <div class="modal-body">
             <h3>Pytanie:</h3>
-            <textarea id="pytanieTextarea" rows="1" cols="40"></textarea>
+            <textarea autocomplete="off"  id="pytanieTextarea" rows="1" cols="40"></textarea>
             <br>
             <h3>Odpowiedź 1:</h3>
-            <textarea id="odpowiedzTextarea1" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <textarea autocomplete="off"  id="odpowiedzTextarea1" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
             <br>
             <h3>Odpowiedź 2:</h3>
-            <textarea id="odpowiedzTextarea2" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <textarea autocomplete="off"  id="odpowiedzTextarea2" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
             <br>
             <h3>Odpowiedź 3:</h3>
-            <textarea id="odpowiedzTextarea3" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <textarea autocomplete="off"  id="odpowiedzTextarea3" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
             <br>
             <h3>Odpowiedź 4:</h3>
-            <textarea id="odpowiedzTextarea4" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
+            <textarea autocomplete="off"  id="odpowiedzTextarea4" class="odpowiedzTextarea" rows="1" cols="40"></textarea>
             <br>
             <h3>Poprawna odpowiedź:</h3>
             <div class="row">
-              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="1">Odpowiedź 1</label>
-              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="2">Odpowiedź 2</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="1"> Odpowiedź 1</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="2"> Odpowiedź 2</label>
             </div>
             <div class="row">
-              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3">Odpowiedź 3</label>
-              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4">Odpowiedź 4</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="3"> Odpowiedź 3</label>
+              <label class="correctAnswerRadio"><input type="radio" name="correctAnswer" value="4"> Odpowiedź 4</label>
             </div>
           </div>
           <div class="modal-footer">

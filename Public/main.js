@@ -22,7 +22,7 @@ $(document).ready(function() {
         $("#"+el.currentTarget.innerText).css("background-color", $(el.currentTarget).parent().css("background-color"));
         setTimeout(function() {
           $("#"+el.currentTarget.innerText).fadeIn(500);
-          if(el.currentTarget.innerText === "Głosowanie") {
+          if(el.currentTarget.innerText === "Quiz") {
             timer(5);
           }
         }, 500);
@@ -33,7 +33,7 @@ $(document).ready(function() {
   $("#dodajPytanie").click(function() {
     $("#addQuestionModal").modal({backdrop: "static"});
     var ilosc = parseInt($("#iloscPytan").text());
-    $("#iloscPytan").text(++ilosc);
+    $("#iloscPytan").text(ilosc);
   });
   $("#pytaniaReturnToMainMenu").click(function() {
     $("#Pytania").fadeOut(500);
@@ -103,10 +103,12 @@ $(document).ready(function() {
     console.log(selectedFile);
     var splittedContent = selectedFile[Object.keys(selectedFile)[0]].split("\n");
     console.log(splittedContent);
+    $("#iloscPytan").text(splittedContent.length-1);
     //Appending:
     for(var i=0; i<splittedContent.length-1; i++) {
+      console.log("wat");
       $("#questionsAccordion").append(
-        '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#questionsAccordion" href="#collapse'+i+'">Pytanie '+(i+1)+'</a></h4></div><div id="collapse'+i+'" class="panel-collapse collapse"><div class="panel-body">'+splittedContent[i]+'</div></div></div>');
+        '<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" data-parent="#questionsAccordion" href="#collapse'+i+'">Tutaj wstawic string pytanie z pliku</a></h4></div><div id="collapse'+i+'" class="panel-collapse collapse"><div class="panel-body">'+splittedContent[i]+'</div></div></div>');
     }
 
     // Wczytanie:
@@ -119,6 +121,9 @@ $(document).ready(function() {
         $("#mainMenuQuestions").fadeIn(500);
       }, 200);
     }, 500);
+  });
+  $(".editBtn").click(function(btn) {
+    console.log(btn.currentTarget.parentNode.parentNode);
   });
 
 
@@ -135,6 +140,8 @@ function createQuestion() {
   wholeQuestion = wholeQuestion.replace(/\n/g, "{-}") + "\n";
   var file = Object.keys(selectedFile)[0];
   console.log(wholeQuestion);
+  $("#iloscPytan").text(parseInt($("#iloscPytan").html())+1);
+  console.log("")
   $.post("/createQuestion", {file: file, question: wholeQuestion}, function(data) {
     // alert(json);
     console.log(data);

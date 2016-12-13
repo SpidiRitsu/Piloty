@@ -90,7 +90,8 @@ input {
 }
 
 /* GŁOSOWANIE */
-#Głosowanie {
+/* jednak quiz */
+#Quiz {
   font-size: 4em;
 }
 .questionBox {
@@ -207,6 +208,10 @@ input {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.7em;
 }
-.headerForThingsInAccordion {
+.headerForThingsInAccordion, .russoOne {
   font-family: 'Russo One', sans-serif;
+}
+.disabledDiv {
+  pointer-events: none;
+  opacity: 0.5;
 }
