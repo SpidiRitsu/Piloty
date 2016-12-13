@@ -1,2 +1,3 @@
 http://stackoverflow.com/questions/4308610/how-to-ignore-certain-files-in-git <-- jak ogarnac .gitignore
+https://github.com/github/gitignore <-- lista wszystkich .gitingore dla poszczegolnych jezykow!
 1. Przesuwanie kafelek podczas wyswietlania pytan za pomoca myszki!!!

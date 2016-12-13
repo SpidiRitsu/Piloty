@@ -2,6 +2,7 @@ var timerId;
 var snackbarTimerId;
 var filesWithContent;
 var selectedFile;
+var selectedQuiz;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -17,12 +18,14 @@ $(document).ready(function() {
       return;
     else {
       $("#mainMenu").fadeOut(500);
+      $("body").css("background-color", $(el.currentTarget).parent().css("background-color"));
       setTimeout(function() {
         $("#"+el.currentTarget.innerText).removeClass("hide").fadeOut(1);
         $("#"+el.currentTarget.innerText).css("background-color", $(el.currentTarget).parent().css("background-color"));
         setTimeout(function() {
+          loadQuestionsFromFiles();
           $("#"+el.currentTarget.innerText).fadeIn(500);
-          if(el.currentTarget.innerText === "Quiz") {
+          if(el.currentTarget.innerText === "Głosowanie") {
             timer(5);
           }
         }, 500);
@@ -125,6 +128,22 @@ $(document).ready(function() {
   $(".editBtn").click(function(btn) {
     console.log(btn.currentTarget.parentNode.parentNode);
   });
+  // QUIZ:
+  $("#loadQuizSelectList").click(function() {
+    var selected = $("#importQuizSelectList").find(":selected").text();
+    selectedQuiz = {};
+    selectedQuiz[selected] = filesWithContent[selected+".txt"];
+    console.log(selectedQuiz);
+    for(var key in selectedQuiz) {
+      $("#quizMainWrapper").append(
+        selectedQuiz[key].replace(/{-}/g,"<br>").replace(/{V}/g, "<br><br>")
+        //DODAC DO FROMATOWANIA KONIEC PYTANIA!!!! czyli chyba {V}
+      );
+
+    }
+    $("#selectQuizWrapper").addClass("hide");
+    $("#quizMainWrapper").removeClass("hide");
+  });
 
 
 });
@@ -141,7 +160,6 @@ function createQuestion() {
   var file = Object.keys(selectedFile)[0];
   console.log(wholeQuestion);
   $("#iloscPytan").text(parseInt($("#iloscPytan").html())+1);
-  console.log("")
   $.post("/createQuestion", {file: file, question: wholeQuestion}, function(data) {
     // alert(json);
     console.log(data);
@@ -154,10 +172,13 @@ function loadQuestionsFromFiles() {
     if(!jQuery.isEmptyObject(json)) {
       filesWithContent = json;
       console.log(filesWithContent);
-      console.log(filesWithContent["Historia.txt"].split("\n").length-1);
+      // console.log(filesWithContent["Historia.txt"].split("\n").length-1);
       for(var key in filesWithContent) {
         console.log(key);
         $("#importQuestionSelectList").append(
+          "<option>"+key.slice(0,-4)+"</option>"
+        );
+        $("#importQuizSelectList").append(
           "<option>"+key.slice(0,-4)+"</option>"
         );
       }

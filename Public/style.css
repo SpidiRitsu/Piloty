@@ -11,8 +11,9 @@ body {
   color: #fff;
   overflow: hidden; /*Usuwa scrollbar*/
   /* smieszki */
-  background: url("Kappa.png");
-  background-color: #301f2f;
+  /*background: url("Kappa.png");*/
+  /*background-color: #301f2f;*/
+  /* koniec smieszkow */
   white-space: normal;
 }
 input {
@@ -91,7 +92,7 @@ input {
 
 /* GŁOSOWANIE */
 /* jednak quiz */
-#Quiz {
+#Głosowanie {
   font-size: 4em;
 }
 .questionBox {
@@ -214,4 +215,27 @@ input {
 .disabledDiv {
   pointer-events: none;
   opacity: 0.5;
+}
+/*QUIZ*/
+#Quiz {
+  font-size: 4em;
+}
+#selectQuizWrapper {
+  width: 100vw;
+  height: 100vh;
+}
+#selectQuizMainBox {
+  border: 12px solid #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+#selectQuizMainBox > div > select {
+  height: auto;
+  width: auto;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.6em;
+  color: #000;
+}
+#quizMainWrapper {
+  font-size: 0.5em;
 }

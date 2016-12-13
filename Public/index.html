@@ -25,18 +25,18 @@
   </head>
   <body>
     <!-- MAIN MENU  -->
-    <div id="mainMenu" class="container-fluid">
+    <div id="mainMenu" class="container-fluid hide">
       <div class="row">
         <div class="oneQuarter" id="srodek"> <!-- 195x214 -->
           <img id="Kappa" style="width:195; height: 214px;" src="logo1lo.png" class="" alt="Kappa" />
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6 mainMenuSelector1st oneQuarter underConstruction">
-          <div class="mainMenuSelectorText">Quiz ten tego no tu zrobic cos innego</div>
+        <div class="col-md-6 mainMenuSelector1st oneQuarter">
+          <div class="mainMenuSelectorText">Quiz</div>
         </div>
         <div class="col-md-6 mainMenuSelector2nd oneQuarter">
-          <div class="mainMenuSelectorText">Quiz</div>
+          <div class="mainMenuSelectorText">Głosowanie</div>
         </div>
       </div>
       <div class="row">
@@ -50,12 +50,27 @@
     </div>
 
     <!-- SUB MENUS -->
+    <!-- STYLE TYLKO DLA TESTOW -->
+    <div id="Quiz" class="container-fluid" style="background-color: #8fa5f1;">
+    <!-- STYLE TYLKO DLA TESTOW -->
+      <div id="selectQuizWrapper" class="container flexBox">
+        <div id="selectQuizMainBox" class="container text-center">
+          <h1>Wybierz listę z pytaniami:</h1>
+          <div class="col-md-12 text-center container">
+            <select id="importQuizSelectList" class="text-center"></select>
+            <button id="loadQuizSelectList" type="button" class="btn btn-success btn-block btn-lg" data-dismiss="modal">WCZYTAJ</button>
+          </div>
+        </div>
+      </div>
 
-    <!-- <div id="Quiz" class="container-fluid hide"></div> -->
+      <div id="quizMainWrapper" class="container text-center hide">
+        <!-- NOTHING IN HERE ! -->
+      </div>
+    </div>
 
     <!-- STYLE TYLKO DLA TESTOW -->
     <!-- Tu bylo glosowanie -->
-    <div id="Quiz" class="container-fluid text-center hide" style = "background-color: #6282f2;">
+    <div id="Głosowanie" class="container-fluid text-center hide" style = "background-color: #6282f2;">
     <!-- STYLE TYLKO DLA TESTOW -->
       <h1 style="font-size:1.7em">Pytanie 1</h1>
       <div class="questionBox container">
@@ -120,7 +135,7 @@
           </div> -->
         </div>
 
-        <div id="accordionBox" class="container flexBox text-center hide">
+        <div id="accordionBox" class="container flexBox text-center">
           <div class="panel-group" id="questionsAccordion">
             <div class="panel panel-info">
               <div class="panel-heading">
@@ -128,7 +143,7 @@
                   <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>
                 </h4>
               </div>
-              <div id="collapse1" class="panel-collapse collapse in">
+              <div id="collapse1" class="panel-collapse collapse"><!-- dodac clase "in" zeby collapse byl na starcie pokazany -->
                 <div class="panel-body">
                   <div class="row disabledDiv">
                     <div class="col-md-6 text-center">
