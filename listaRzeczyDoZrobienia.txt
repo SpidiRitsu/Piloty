@@ -1,2 +1,2 @@
 http://stackoverflow.com/questions/4308610/how-to-ignore-certain-files-in-git <-- jak ogarnac .gitignore
-1. Przesuwanie kafelek podczas wyswietlania pytan za pomoca myszki
+1. Przesuwanie kafelek podczas wyswietlania pytan za pomoca myszki!!!
