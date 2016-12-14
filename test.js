@@ -194,7 +194,7 @@ function parseData(data, server) {
 	}
 	if(translatedData.length !== 0 && pilot.Header === "03280000") {
 		console.log("Code sent: "+translatedData.join(''));
-io.emit("emit", pilot.Id, translatedData.join(''));
+		io.emit("emitTranslatedCode", pilot.Id, translatedData.join(''));
 	}
 	console.log(data.join(''));
 	var codeKappa = data.join('');

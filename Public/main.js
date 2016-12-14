@@ -132,21 +132,65 @@ $(document).ready(function() {
   $("#loadQuizSelectList").click(function() {
     var selected = $("#importQuizSelectList").find(":selected").text();
     selectedQuiz = {};
-    selectedQuiz[selected] = filesWithContent[selected+".txt"];
-    console.log(selectedQuiz);
+    var foo = [];
+    selectedQuiz[selected] = filesWithContent[selected+".txt"].split("{V}");
     for(var key in selectedQuiz) {
+      for(var i=0; i<selectedQuiz[key].length; i++) {
+        foo[i] = selectedQuiz[key][i].split("{||}");
+        // foo[i].pop();
+      }
+      console.log(selectedQuiz[key]);
+    }
+    foo.pop();
+    for(var i=0; i<foo.length; i++) {
+      foo[i][0] = foo[i][0].replace(/{-}/g, "\n");
+    }
+    selectedQuiz = foo;
+    console.log(selectedQuiz);
+    console.log(foo);
+    /*for(var key in selectedQuiz) {
       $("#quizMainWrapper").append(
-        selectedQuiz[key].replace(/{-}/g,"<br>").replace(/{V}/g, "<br><br>")
+        selectedQuiz[key]+"<br>"
+        // selectedQuiz[key].replace(/{-}/g,"<br>").replace(/{V}/g, "<br><br>")
         //DODAC DO FROMATOWANIA KONIEC PYTANIA!!!! czyli chyba {V}
       );
 
-    }
+    }*/
+    localStorage.setItem('__quizing', true);
+    loadQuestionAndAnswersFromQuiz(selectedQuiz, 0);
     $("#selectQuizWrapper").addClass("hide");
     $("#quizMainWrapper").removeClass("hide");
   });
+  /*window.addEventListener("storage", function() {
+    if(localStorage.getItem('__change')==="waddup!") {
+      alert("WORKING");
+      localStorage.removeItem('__change');
+    }
+  }, false);
+  *//*if(localStorage.getItem('__change')==="waddup!") {
+    alert("WORKING");
+    localStorage.removeItem('__change');
+  }
+  $(window).bind('storage', function (e) {
+      console.log(e.originalEvent.key, e.originalEvent.newValue);
+  });*/
+
+  $(window).on('storage',function(e){
+   if(e.originalEvent.storageArea===sessionStorage){
+     alert('change');
+   }
+   // else, event is caused by an update to localStorage, ignore it
+});
 
 
 });
+
+function loadQuestionAndAnswersFromQuiz(file, index) {
+  $("#questionQuizMainBox").html(file[index][0]);
+  for(var i=1; i<5; i++) {
+    $("#answer"+i+"QuizMainBox").html(file[index][i]);
+  }
+}
 
 function createQuestion() {
   var wholeQuestion =
@@ -155,16 +199,17 @@ function createQuestion() {
     $("#odpowiedzTextarea2").val()+"{||}"+
     $("#odpowiedzTextarea3").val()+"{||}"+
     $("#odpowiedzTextarea4").val()+"{||}"+
-    $("input[name=correctAnswer]:checked").val()+"{||}";
-  wholeQuestion = wholeQuestion.replace(/\n/g, "{-}") + "\n";
+    $("input[name=correctAnswer]:checked").val()+"";
+  wholeQuestion = wholeQuestion.replace(/\n/g, "{-}") + "{V}\n";
   var file = Object.keys(selectedFile)[0];
   console.log(wholeQuestion);
   $("#iloscPytan").text(parseInt($("#iloscPytan").html())+1);
-  $.post("/createQuestion", {file: file, question: wholeQuestion}, function(data) {
+  $.post("/createQuestion", {file: file, question: wholeQuestion}); /*function(data) {
     // alert(json);
     console.log(data);
     // console.log(something);
-  });
+  });*/
+  // console.log("po post");
 }
 
 function loadQuestionsFromFiles() {

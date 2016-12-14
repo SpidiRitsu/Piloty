@@ -239,3 +239,20 @@ input {
 #quizMainWrapper {
   font-size: 0.5em;
 }
+#quizMainBox {
+  width: 100%;
+  height: 100vh;
+}
+#questionQuizMainBox {
+  border: 12px solid #fff;
+  border-radius: 12px;
+  margin-top: 30px;
+  max-height: 100px;
+}
+.answerQuizMainBox {
+  font-size: 0.7em;
+  border: 12px solid #fff;
+  border-radius: 12px;
+  /*width: auto;*/
+  /*height: auto;*/
+}
