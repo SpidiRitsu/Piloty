@@ -3,6 +3,11 @@ var snackbarTimerId;
 var filesWithContent;
 var selectedFile;
 var selectedQuiz;
+var socket = io();
+var alreadyUsed = [];
+var sessionAnswers = [0, 0, 0, 0];
+var remotesUsed;
+var quizing = false;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -142,45 +147,53 @@ $(document).ready(function() {
       console.log(selectedQuiz[key]);
     }
     foo.pop();
-    for(var i=0; i<foo.length; i++) {
-      foo[i][0] = foo[i][0].replace(/{-}/g, "\n");
+    for(var j=0; j<foo.length; j++) {
+      foo[j][0] = foo[j][0].replace(/{-}/g, "\n");
     }
     selectedQuiz = foo;
     console.log(selectedQuiz);
     console.log(foo);
+    remotesUsed = $("input[name=howMuchRemotes]").val();
+    for(var k=0; k<remotesUsed; k++) {
+      $("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+(k+1)+'">U'+(k+1)+'</div>');
+    }
     /*for(var key in selectedQuiz) {
       $("#quizMainWrapper").append(
         selectedQuiz[key]+"<br>"
         // selectedQuiz[key].replace(/{-}/g,"<br>").replace(/{V}/g, "<br><br>")
         //DODAC DO FROMATOWANIA KONIEC PYTANIA!!!! czyli chyba {V}
-      );
-
-    }*/
-    localStorage.setItem('__quizing', true);
+      );*/
     loadQuestionAndAnswersFromQuiz(selectedQuiz, 0);
     $("#selectQuizWrapper").addClass("hide");
     $("#quizMainWrapper").removeClass("hide");
   });
-  /*window.addEventListener("storage", function() {
-    if(localStorage.getItem('__change')==="waddup!") {
-      alert("WORKING");
-      localStorage.removeItem('__change');
+  //ODPOWIADANIE NA PYTANIA
+  socket.on("emitTranslatedCode", function(pilotId, code) {
+    if(quizing) {
+      console.log(pilotId, code);
+      if(alreadyUsed.indexOf(pilotId) !== -1)
+        console.log("pilot was already used!");
+      else {
+        console.log("Code sent by pilot "+pilotId+" :"+code);
+        if(code>=1 && code<=4) {
+          sessionAnswers[code-1]++;
+          alreadyUsed.push(pilotId);
+          // $("#voted") DODAC LISTE USEROW!
+          remotesUsed--;
+          if(remotesUsed <= 0) {
+            $("#questionQuizMainBox").addClass("hide");
+            $("#resultsAfterQuiz").html(
+              "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
+              "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
+              "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
+              "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
+            );
+          }
+        }
+      }
     }
-  }, false);
-  *//*if(localStorage.getItem('__change')==="waddup!") {
-    alert("WORKING");
-    localStorage.removeItem('__change');
-  }
-  $(window).bind('storage', function (e) {
-      console.log(e.originalEvent.key, e.originalEvent.newValue);
-  });*/
+  });
 
-  $(window).on('storage',function(e){
-   if(e.originalEvent.storageArea===sessionStorage){
-     alert('change');
-   }
-   // else, event is caused by an update to localStorage, ignore it
-});
 
 
 });

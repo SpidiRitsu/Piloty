@@ -58,6 +58,7 @@
           <h1>Wybierz listę z pytaniami:</h1>
           <div class="col-md-12 text-center container">
             <select id="importQuizSelectList" class="text-center"></select>
+            <input type="text" class="form-control text-center" name="howMuchRemotes" value="" placeholder="Ile pilotow zostanie uzytych?">
             <button id="loadQuizSelectList" type="button" class="btn btn-success btn-block btn-lg" data-dismiss="modal">WCZYTAJ</button>
           </div>
         </div>
@@ -85,6 +86,15 @@
               <!-- Tu idzie odpowiedz -->
             </div>
           </div>
+          <div id="alreadyVotedBox" class="col-md-12 text-center" style="position: fixed; bottom: 0; left: 0; border: 12px solid #fff; border-bottom: 0px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+            <div class="row">
+              <!-- col-xs-1 - ilosc pilotow -->
+            </div>
+          </div>
+        </div>
+
+        <div id="resultsAfterQuiz" class="container flexBox" style="border-radius: 12px solid #fff; border-radius: 12px;">
+
         </div>
       </div>
     </div>

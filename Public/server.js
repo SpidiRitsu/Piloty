@@ -28,23 +28,23 @@ $(document).ready(function() {
           case "1": {
             $("#answer"+code+"QuizMainBox").css("background-color", "#5cb85c");
             alreadyUsed.push(pilotId);
-          }; break;
+          } break;
           case "2": {
             $("#answer"+code+"QuizMainBox").css("background-color", "#5cb85c");
             alreadyUsed.push(pilotId);
-          }; break;
+          } break;
           case "3": {
             $("#answer"+code+"QuizMainBox").css("background-color", "#5cb85c");
             alreadyUsed.push(pilotId);
-          }; break;
+          } break;
           case "4": {
             $("#answer"+code+"QuizMainBox").css("background-color", "#5cb85c");
             alreadyUsed.push(pilotId);
-          }; break;
+          } break;
           case "-0": {
             localStorage.setItem('__change', "waddup!");
             sessionStorage.setItem("waddup", "waddup!");
-          }; break;
+          } break;
         }
       }
     }
