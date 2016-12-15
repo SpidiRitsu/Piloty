@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emulator</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+
+    </style>
+
+    <script>
+      // var socket = io();
+      var id = ["1796", "1c08", "1aef", "177d", "19f0", "11d3", "19c4", "13d5", "1c52", "19e7", "80c0"];
+      $(document).ready(function() {
+        $(".btn").click(function() {
+          $(this).blur();
+        });
+        for(var i=0; i<id.length; i++) {
+          let variable = "Remote "+(i+1)+" ["+id[i]+"]";
+          if(i+1 === id.length) {
+            variable = "Mother ["+id[i]+"]";
+          }
+          $("#remoteId").append('<option value="'+id[i]+'">'+variable+'</option>');
+        }
+
+        $("#sendCode").click(function() {
+          var remoteId = $("#remoteId").find(":selected").val();
+          var remoteCode = $("#remoteCode").val();
+          var regex = /[^0-9/.-]/g;
+          console.log(remoteId);
+          if(remoteId === "" || remoteCode === "") {
+            console.error("NO CONTENT!");
+            return;
+          }
+          else if(regex.test(remoteCode)) {
+            console.error("SPECIAL CHARACTERS");
+            return;
+          }
+          else {
+            $.post("/emulatorSendCode", {id: remoteId, code: remoteCode})
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="mainBox" class="container text-center">
+      <h1>Emulator</h1>
+      <!-- <input id="remoteId" class="text-center" type="text" name="id" value="" placeholder="id"> -->
+      <select class="" id="remoteId"></select>
+      <br><br>
+      <input id="remoteCode" class="text-center" type="text" name="code" value="" placeholder="code (max 6 digits)">
+      <br>
+      <button id="sendCode" type="button" class="btn btn-default">
+        SEND
+      </button>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+</html>

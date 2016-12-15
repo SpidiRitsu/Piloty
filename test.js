@@ -64,8 +64,21 @@ function main() {
 	app.use(express.static(__dirname+"/Public"));
 
 	app.get("/", function (req,res) {
-		res.sendFile(__dirname+"/Public/indexTest.html");
+		res.sendFile(__dirname+"/Public/index.html");
 	});
+  app.get("/emulator", function (req,res) {
+    res.sendFile(__dirname+"/Emulator/index.html");
+  });
+
+  app.post("/emulatorSendCode", function(req, res) {
+    var remoteId = req.body.id;
+    var remoteCode = req.body.code;
+    console.log(remoteId, remoteCode);
+    emulatorCodeTranslation(remoteId, remoteCode);
+    // io.emit("emulatorCode", remoteId, remoteCode);
+    res.writeHead(200, {"Content-Type": "text/plain"});
+    res.end();
+  });
 
   app.post("/createQuestion", function(req,res) {
     var question = req.body.question;
@@ -122,22 +135,62 @@ function main() {
 		else
 			opn("http://localhost:"+process.env.PORT);
 	}
+  if(process.argv[2]==="emulator" || process.argv[3]==="emulator") {
+
+  }
 
 	var usb = require("usb");
 	//var mouse = require("./mouse.js")(2,5)
 	usb.setDebugLevel(0);
 
 	var myUsb = usb.findByIds(312,312);
-	if(!myUsb)
-		return console.log("NO DEVICE!!!!");
-	var i=0;
+  var i=0;
+	if(!myUsb) {
 
-	myUsb.open();
-	myUsb.interface().claim();
-	poll(myUsb,i,io);
+    return console.log("NO DEVICE!!!!");
+  }
+  else {
+    myUsb.open();
+    myUsb.interface().claim();
+    poll(myUsb,i); // 3 argument "io"
+  }
 }
 
-function poll(device, counter, server) {
+function emulatorCodeTranslation(remoteId, remoteCode) {
+  var encryptionData = {
+    "0": "0c",
+    "1": "02",
+    "2": "09",
+    "3": "0e",
+    "4": "03",
+    "5": "0a",
+    "6": "0f",
+    "7": "04",
+    "8": "0b",
+    "9": "10",
+    "/": "05",
+    ".": "11",
+    "-": "06"
+  };
+  remoteCode = remoteCode.slice('');
+  var translatedData;
+  if(remoteId !== "80c0") {
+    translatedData = "03280000"+remoteId;
+    for(var key in encryptionData) {
+      for(var i=0; i<remoteCode.length; i++) {
+        if(key === remoteCode[i])
+        translatedData += encryptionData[key];
+      }
+    }
+  }
+  else if(remoteId === "80c0") {
+    translatedData = "01148000"+remoteId+remoteCode;
+  }
+  console.log(translatedData);
+  parseData(translatedData);
+}
+
+function poll(device, counter) { //3 argument "server"
 	counter++;
 	//console.log("\n\n["+counter+"] Waiting for a poll. . .")
 	device.interface().endpoint(129).transfer(64,function(err,data) {
@@ -149,14 +202,14 @@ function poll(device, counter, server) {
 		else {
 		//console.log(data)
 		console.log("["+counter+"]------------------------------------------");
-		parseData(data, server);
+		parseData(data); // 2 argument "server"
 		}
 		//console.log("------------------------------------------")
 		poll(device, counter);
 	});
 }
 
-function parseData(data, server) {
+function parseData(data) { //tu byl drugi argument "server"
 	var encryptionData = {
 		"0c": "0",
 		"02": "1",

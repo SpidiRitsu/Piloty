@@ -256,3 +256,26 @@ input {
   /*width: auto;*/
   /*height: auto;*/
 }
+/* USTAWIENIA */
+#Ustawienia {
+  font-size: 4em;
+}
+#ustawieniaWrapper {
+  width: 100vw;
+  height: 100vh;
+}
+#ustawieniaMainBox {
+  border: 12px solid #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+.btn.btn-emulator, .btn-emulator {
+  background-color: #fff;
+  color: #d9534f;
+  border: 3px solid #fff;
+}
+.btn.btn-emulator:hover, .btn-emulator:hover {
+  background-color: #d9534f;
+  color: #fff;
+  border: 3px solid #fff;
+}
