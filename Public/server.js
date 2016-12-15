@@ -7,11 +7,14 @@ $(document).ready(function() {
   socket.on("kappa", function(code) {
     console.log(code);
     console.log("emitting");
-    angle += 15;
+    if(code==="2005")
+      angle += 15;
+    else if(code==="2006")
+      angle -= 15;
     $("#Kappa").css('transform','rotate(' + angle + 'deg)');
   });
   //ODPOWIADANIE
-  $("#loadQuizSelectList").click(function() {
+  /*$("#loadQuizSelectList").click(function() {
     quizing = localStorage.getItem('__quizing');
     console.log(quizing);
     localStorage.removeItem('__quizing');
@@ -48,5 +51,5 @@ $(document).ready(function() {
         }
       }
     }
-  });
+  });*/
 });

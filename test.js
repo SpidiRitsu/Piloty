@@ -196,6 +196,10 @@ function parseData(data, server) {
 		console.log("Code sent: "+translatedData.join(''));
 		io.emit("emitTranslatedCode", pilot.Id, translatedData.join(''));
 	}
+	if(pilot.Header === "01148000" && data.join('') === "03") {
+		console.log("EMITTING STOP QUIZING: "+data.join(''));
+		io.emit("emitTranslatedCode", pilot.Id, data.join(''));
+	}
 	console.log(data.join(''));
 	var codeKappa = data.join('');
 	if(codeKappa=="2006" || codeKappa=='2005') {

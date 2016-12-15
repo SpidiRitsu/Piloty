@@ -157,6 +157,7 @@ $(document).ready(function() {
     for(var k=0; k<remotesUsed; k++) {
       $("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+(k+1)+'">U'+(k+1)+'</div>');
     }
+    quizing = true;
     /*for(var key in selectedQuiz) {
       $("#quizMainWrapper").append(
         selectedQuiz[key]+"<br>"
@@ -169,19 +170,44 @@ $(document).ready(function() {
   });
   //ODPOWIADANIE NA PYTANIA
   socket.on("emitTranslatedCode", function(pilotId, code) {
+    console.log("TESTING: "+pilotId+" with code "+code);
     if(quizing) {
       console.log(pilotId, code);
       if(alreadyUsed.indexOf(pilotId) !== -1)
         console.log("pilot was already used!");
       else {
         console.log("Code sent by pilot "+pilotId+" :"+code);
-        if(code>=1 && code<=4) {
+        if(pilotId === "80c0" && code === "03") {
+          $("#quizMainBox").addClass("hide");
+          $("#resultsAfterQuiz").removeClass("hide");
+          $("#resultsAfterQuiz").html(
+            "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
+            "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
+            "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
+            "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
+          );
+        }
+        else if(code>=1 && code<=4) {
           sessionAnswers[code-1]++;
           alreadyUsed.push(pilotId);
           // $("#voted") DODAC LISTE USEROW!
           remotesUsed--;
+          console.log(remotesUsed);
+          switch(pilotId) {
+            case "1796": $("#votedUser1").addClass("hide"); break;
+            case "1c08": $("#votedUser2").addClass("hide"); break;
+            case "1aef": $("#votedUser3").addClass("hide"); break;
+            case "177d": $("#votedUser4").addClass("hide"); break;
+            case "19f0": $("#votedUser5").addClass("hide"); break;
+            case "11d3": $("#votedUser6").addClass("hide"); break;
+            case "19c4": $("#votedUser7").addClass("hide"); break;
+            case "13d5": $("#votedUser8").addClass("hide"); break;
+            case "1c52": $("#votedUser9").addClass("hide"); break;
+            case "19e7": $("#votedUser10").addClass("hide"); break;
+          }
           if(remotesUsed <= 0) {
-            $("#questionQuizMainBox").addClass("hide");
+            $("#quizMainBox").addClass("hide");
+            $("#resultsAfterQuiz").removeClass("hide");
             $("#resultsAfterQuiz").html(
               "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
               "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
