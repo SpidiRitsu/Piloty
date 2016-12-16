@@ -1,7 +1,7 @@
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Testowe pytani{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}3{V}
+Pytanie 1 z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
+Pytanie 2 z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}2{V}
+Pytanie 3 z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}3{V}
+Tylko 4 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
+Tylko 5 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
+Tylko 6 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}2{V}
+Testowe 7 pytani{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}2{V}

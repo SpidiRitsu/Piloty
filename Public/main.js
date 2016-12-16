@@ -5,8 +5,11 @@ var selectedFile;
 var selectedQuiz;
 var socket = io();
 var alreadyUsed = [];
-var sessionAnswers = [0, 0, 0, 0];
+var sessionAnswers = [];
+var sessionCorrectAnswers = [];
+var fixedRemotesUsed;
 var remotesUsed;
+var quizIndex;
 var quizing = false;
 
 $(document).ready(function() {
@@ -149,22 +152,26 @@ $(document).ready(function() {
     foo.pop();
     for(var j=0; j<foo.length; j++) {
       foo[j][0] = foo[j][0].replace(/{-}/g, "\n");
+      sessionAnswers.push([0, 0, 0, 0]);
+      sessionCorrectAnswers.push([]);
     }
     selectedQuiz = foo;
     console.log(selectedQuiz);
     console.log(foo);
+    // console.log(sessionAnswers);
+    // console.log(sessionCorrectAnswers);
     remotesUsed = $("input[name=howMuchRemotes]").val();
-    for(var k=0; k<remotesUsed; k++) {
-      $("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+(k+1)+'">U'+(k+1)+'</div>');
-    }
+    fixedRemotesUsed = remotesUsed;
     quizing = true;
+    quizIndex = 0;
+    reloadVoters(fixedRemotesUsed);
     /*for(var key in selectedQuiz) {
       $("#quizMainWrapper").append(
         selectedQuiz[key]+"<br>"
         // selectedQuiz[key].replace(/{-}/g,"<br>").replace(/{V}/g, "<br><br>")
         //DODAC DO FROMATOWANIA KONIEC PYTANIA!!!! czyli chyba {V}
       );*/
-    loadQuestionAndAnswersFromQuiz(selectedQuiz, 0);
+    loadQuestionAndAnswersFromQuiz(selectedQuiz, quizIndex);
     $("#selectQuizWrapper").addClass("hide");
     $("#quizMainWrapper").removeClass("hide");
   });
@@ -178,17 +185,26 @@ $(document).ready(function() {
       else {
         console.log("Code sent by pilot "+pilotId+" :"+code);
         if(pilotId === "80c0" && code === "03") {
-          $("#quizMainBox").addClass("hide");
-          $("#resultsAfterQuiz").removeClass("hide");
-          $("#resultsAfterQuiz").html(
-            "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
-            "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
-            "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
-            "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
-          );
+          console.log("BREAK!!!!");
+          loadQuestionAndAnswersFromQuiz(selectedQuiz, quizIndex);
+          reloadVoters(fixedRemotesUsed);
+          // $("#quizMainBox").addClass("hide");
+          // $("#resultsAfterQuiz").removeClass("hide");
+          // $("#resultsAfterQuiz").html(
+          //   "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
+          //   "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
+          //   "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
+          //   "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
+          // );
         }
         else if(code>=1 && code<=4) {
-          sessionAnswers[code-1]++;
+          sessionAnswers[quizIndex-1][code-1]++;
+          console.log(sessionAnswers[quizIndex-1]);
+          if(code === selectedQuiz[quizIndex-1][5]) {
+              // sessionCorrectAnswers[quizIndex-1]++;
+              sessionCorrectAnswers[quizIndex-1].push(pilotId);
+          }
+
           alreadyUsed.push(pilotId);
           // $("#voted") DODAC LISTE USEROW!
           remotesUsed--;
@@ -206,14 +222,16 @@ $(document).ready(function() {
             case "19e7": $("#votedUser10").addClass("hide"); break;
           }
           if(remotesUsed <= 0) {
-            $("#quizMainBox").addClass("hide");
-            $("#resultsAfterQuiz").removeClass("hide");
-            $("#resultsAfterQuiz").html(
-              "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
-              "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
-              "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
-              "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
-            );
+            loadQuestionAndAnswersFromQuiz(selectedQuiz, quizIndex);
+            reloadVoters(fixedRemotesUsed);
+            // $("#quizMainBox").addClass("hide");
+            // $("#resultsAfterQuiz").removeClass("hide");
+            // $("#resultsAfterQuiz").html(
+            //   "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
+            //   "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
+            //   "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
+            //   "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
+            // );
           }
         }
       }
@@ -224,10 +242,52 @@ $(document).ready(function() {
 
 });
 
+function reloadVoters(voters) {
+  // $("#alreadyVotedBox").html("");
+  remotesUsed = voters;
+  alreadyUsed = [];
+  for(var k=0; k<voters; k++) {
+    $("#votedUser"+(k+1)).remove();
+    console.log("votedUser"+(k+1));
+    $("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+(k+1)+'">U'+(k+1)+'</div>');
+    $("#votedUser"+(k+1)).removeClass("hide");
+  }
+}
+
 function loadQuestionAndAnswersFromQuiz(file, index) {
-  $("#questionQuizMainBox").html(file[index][0]);
-  for(var i=1; i<5; i++) {
-    $("#answer"+i+"QuizMainBox").html(file[index][i]);
+  if(index === file.length) {
+    console.log(sessionAnswers);
+    $("#quizMainBox").addClass("hide");
+    $("#resultsAfterQuiz").removeClass("hide");
+    /*$("#resultsAfterQuiz").html(
+      "Na odpowiedz 1 glosu udzielilo: "+sessionAnswers[0]+" osob!<br>"+
+      "Na odpowiedz 2 glosu udzielilo: "+sessionAnswers[1]+" osob!<br>"+
+      "Na odpowiedz 3 glosu udzielilo: "+sessionAnswers[2]+" osob!<br>"+
+      "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"+
+      sessionAnswers
+    );*/
+    for(let i=0; i<sessionAnswers.length; i++) {
+      // let correctAnswersForQuestion = 0;
+      // for(let j=0; j<sessionAnswers[i].length; j++) {
+      //   console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
+      //   if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
+      //     console.log("correct");
+      //     correctAnswersForQuestion = selectedQuiz[i][5];
+      //   }
+      // }
+      $("#resultsAfterQuiz").append(
+        // "Pytanie "+(i+1)+": "+sessionAnswers[i]+"<br>"
+        "Na pytanie "+(i+1)+" poprawej odpowiedzi udzielilo: "+sessionCorrectAnswers[i]+"<br>"
+      );
+    }
+  }
+  else {
+    $("#questionQuizMainBox").html(file[index][0]);
+    for(var i=1; i<5; i++) {
+      $("#answer"+i+"QuizMainBox").html(file[index][i]);
+    }
+    quizIndex++;
+    console.log("POPRAWNA ODPOEIDZ: "+file[index][5]);
   }
 }
 
