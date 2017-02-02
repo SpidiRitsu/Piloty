@@ -199,10 +199,11 @@ function emulatorCodeTranslation(remoteId, remoteCode) {
   var translatedData;
   if(remoteId !== "80c0") {
     translatedData = "03280000"+remoteId;
-    for(var key in encryptionData) {
-      for(var i=0; i<remoteCode.length; i++) {
-        if(key === remoteCode[i])
+    for(var i=0; i<remoteCode.length; i++) {
+      for(var key in encryptionData) {
+        if(key === remoteCode[i]) {
         translatedData += encryptionData[key];
+        }
       }
     }
   }
@@ -282,8 +283,9 @@ function parseData(data) { //tu byl drugi argument "server"
 		io.emit("kappa", codeKappa);
 
 	}
-	var mouse = require("./mouse.js");
-	mouse(1,5,data);
+	//wypierdzielac z tym szajsem ponizej
+	//var mouse = require("./mouse.js");
+	//mouse(1,5,data);
 }
 
 main();
