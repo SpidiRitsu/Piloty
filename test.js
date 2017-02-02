@@ -50,6 +50,24 @@ function loadQuestionsFromFiles() {
 	return json;
 }
 
+function loadStudents() {
+	var json = {};
+	var files = fs.readdirSync(__dirname+"/Klasy");
+	files.forEach(function(file) {
+		var extname = path.extname(file);
+		if(extname === ".txt") {
+			var content = fs.readFileSync(__dirname+"/Klasy/"+file, "utf-8");
+			// json[file] = content;
+			json[file.slice(0, -4)] = {};
+			content = content.split(/\r?\n/);
+			for(var i=0; i<content.length; i++) {
+				json[file.slice(0, -4)][i+1] = content[i].slice(3); 
+			}
+		}
+	});
+	return json;
+}
+
 function main() {
 	var express = require("express");
 	var app = express();
@@ -110,6 +128,11 @@ function main() {
 		// console.log(myJson);
 		res.json(json);
 		res.end();
+	});
+
+	app.post("/loadStudents", function (req, res) {
+		var json = loadStudents();
+		res.json(json); 
 	});
 
 	io.on("connection", function(socket) {

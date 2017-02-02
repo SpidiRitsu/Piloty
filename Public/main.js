@@ -11,6 +11,7 @@ var fixedRemotesUsed;
 var remotesUsed;
 var quizIndex;
 var quizing = false;
+var students;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -18,6 +19,12 @@ $(document).ready(function() {
   //TO POWYZEJ DO NAPRAWY BUGA W FIREFOXIE!
   //SPRAWDZIC CZY BUG TEN DZIALA W SZKOLE!: PODCZAS WYSWIETLANIA SNACKBARRA Z ERROREM ODSWIEEZYC STRONE!
   loadQuestionsFromFiles(); //laduje pliki z pytaniami do zmiennej i przypina do listy
+
+  $.post("/loadStudents", function (json) {
+    students = json;
+    console.log(students);
+  });
+
   $(".btn").click(function() {
     $(this).blur();
   });
@@ -314,6 +321,8 @@ function createQuestion() {
 function loadQuestionsFromFiles() {
   $.post("/loadQuestionsFromFiles", function(json) {
     if(!jQuery.isEmptyObject(json)) {
+      $("#importQuestionSelectList").empty();
+      $("#importQuizSelectList").empty();
       filesWithContent = json;
       console.log(filesWithContent);
       // console.log(filesWithContent["Historia.txt"].split("\n").length-1);
