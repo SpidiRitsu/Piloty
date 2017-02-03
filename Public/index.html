@@ -295,15 +295,16 @@
         <div class="modal-content">
           <div class="modal-header">
             <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
-            <h1 class="modal-title" id="">Połączonych urządzeń: <span id="loadQuizingDevicesConnectedSpan">0</span>/<span id="loadQuizingDevicesMax">X</span></h1>
+            <h1 class="modal-title" id="">Połączonych urządzeń: <span id="loadQuizingDevicesConnectedSpan">0</span>/<span id="loadQuizingDevicesMax">X</span><br><small>Wyślij z pilota kod <kbd>./</kbd> i swój numer z dziennika<br>Przykład: <kbd>./14</kbd> gdy masz numer 14</small></h1>
           </div>
-          <div class="modal-body">
-            <div id="connectedDevices" class="text-center"></div>
+          <div id="connectedDevices" class="modal-body" style="height: auto !important; overflow: auto !important;">
+            <!-- <div id="connectedDevices" class="text-center col-md-12">THINGS:</div><br> -->
           </div>
           <div class="modal-footer">
             <!-- <button id="loadSelectedQuestionList" type="button" class="btn btn-info btn-block btn-lg" data-dismiss="modal">WCZYTAJ</button> -->
-            <button type="button" class="btn btn-primary btn-block btn-lg" data-dismiss="modal">ZAMKNIJ</button>
-          </div>
+            <!-- <button type="button" class="btn btn-primary btn-block btn-lg" data-dismiss="modal">ZAMKNIJ</button> -->
+            <button id="loadQuizingDevicesStartQuiz" type="button" class="btn btn-danger btn-block btn-lg" data-dismiss="modal" disabled>START</button>
+          </div> 
         </div>
       </div>
     </div>

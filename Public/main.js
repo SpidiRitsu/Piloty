@@ -198,15 +198,35 @@ $(document).ready(function() {
       if(!everyone_connected) {
         if (code.slice(0,2) === "./" && /^\d+$/.test(code.slice(2))) {
           if (!remotesInQuiz.hasOwnProperty(code.slice(2))) {
-          remotesInQuiz[pilotId] = code.slice(2);
-          console.log(remotesInQuiz); 
-          $("#loadQuizingDevicesConnectedSpan").html(Object.keys(remotesInQuiz).length);
-          $("#connectedDevices").empty();
-          //dodac 12 kolumn, gdzie numerki beda szly od lewej do prawej
-          var keysRemotesInQuiz = Object.keys(remotesInQuiz);
-          for(var k=0; k<Object.keys(remotesInQuiz).length; k++) {
-            $("#connectedDevices").append('<div class="col-xs-1" id="connectedDevice'+(k+1)+'">'+remotesInQuiz[keysRemotesInQuiz[k]]+'</div>');
-          }
+            if (Object.keys(remotesInQuiz).length == fixedRemotesUsed && remotesInQuiz.hasOwnProperty(pilotId)) {
+              remotesInQuiz[pilotId] = code.slice(2);
+              console.log(remotesInQuiz); 
+              var keysRemotesInQuiz = Object.keys(remotesInQuiz);
+              $("#loadQuizingDevicesConnectedSpan").html(keysRemotesInQuiz.length);
+              $("#connectedDevices").empty();
+              //dodac 12 kolumn, gdzie numerki beda szly od lewej do prawej
+              for(var k=0; k<Object.keys(remotesInQuiz).length; k++) {
+                $("#connectedDevices").append('<div class="col-xs-3 connectedDevice" id="connectedDevice'+(k+1)+'">'+remotesInQuiz[keysRemotesInQuiz[k]]+'</div>');
+              }
+            }
+            else if (Object.keys(remotesInQuiz).length < fixedRemotesUsed) {
+                console.log(Object.keys(remotesInQuiz).length + "<=" + fixedRemotesUsed);
+              remotesInQuiz[pilotId] = code.slice(2);
+              console.log(remotesInQuiz); 
+              var keysRemotesInQuiz = Object.keys(remotesInQuiz);
+              $("#loadQuizingDevicesConnectedSpan").html(keysRemotesInQuiz.length);
+              $("#connectedDevices").empty();
+              //dodac 12 kolumn, gdzie numerki beda szly od lewej do prawej
+              for(var k=0; k<Object.keys(remotesInQuiz).length; k++) {
+                $("#connectedDevices").append('<div class="col-xs-3 connectedDevice" id="connectedDevice'+(k+1)+'">'+remotesInQuiz[keysRemotesInQuiz[k]]+'</div>');
+              }
+              if (keysRemotesInQuiz.length == fixedRemotesUsed) {
+                $("#loadQuizingDevicesStartQuiz").attr("disabled", false);
+                $("#loadQuizingDevicesStartQuiz").removeClass("btn-danger");
+                $("#loadQuizingDevicesStartQuiz").addClass("btn-success");
+                everyone_connected = true;
+              }
+            }
           }
         }
       }

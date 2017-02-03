@@ -279,3 +279,7 @@ input {
   color: #fff;
   border: 3px solid #fff;
 }
+.connectedDevice {
+  font-size: 25px;
+  /*margin: 10px;*/
+}

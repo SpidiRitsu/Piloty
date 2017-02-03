@@ -147,7 +147,7 @@ function main() {
 
 
 	// readQuestions();
-	server.listen(process.env.PORT || 3000, "localhost");
+	server.listen(process.env.PORT || 3000);
 	if(process.env.PORT===undefined)
 		console.log("listening on port 3000");
 	else
