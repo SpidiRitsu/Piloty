@@ -1,0 +1,4 @@
+Pytanie 1{||}Odpowiedz A{||}Odpowiedz B{||}Odpowiedz C{||}Odpowiedz D{||}1{V}
+Pytanie 2{||}Odpowiedz A{||}Odpowiedz B{||}Odpowiedz C{||}Odpowiedz D{||}2{V}
+Pytanie 3{||}Odpowiedz A{||}Odpowiedz B{||}Odpowiedz C{||}Odpowiedz D{||}3{V}
+Pytanie 4{||}Odpowiedz A{||}Odpowiedz B{||}Odpowiedz C{||}Odpowiedz D{||}4{V}

@@ -35,8 +35,12 @@
         <div class="col-md-6 mainMenuSelector1st oneQuarter">
           <div class="mainMenuSelectorText">Quiz</div>
         </div>
-        <div class="col-md-6 mainMenuSelector2nd oneQuarter underConstruction">
-          <div class="mainMenuSelectorText">Głosowanie</div>
+        <div class="col-md-6 mainMenuSelector2nd oneQuarter"> <!-- klasa underConstruction sprawia ze jest under construction -->
+          <!-- <div class="mainMenuSelectorText">Głosowanie</div> -->
+          <blockquote style="font-size: 25px;" class="text-center">
+          „Nauka jest jak niezmierne morze. Im więcej jej pijesz, tym bardziej jesteś spragniony.”
+            <footer style="color: #000f75;">Stefan Żeromski</footer>
+          </blockquote>
         </div>
       </div>
       <div class="row">
@@ -51,7 +55,7 @@
 
     <!-- SUB MENUS -->
     <!-- STYLE TYLKO DLA TESTOW -->
-    <div id="Quiz" class="container-fluid hide" style="background-color: #8fa5f1;">
+    <div id="Quiz" class="container-fluid hide">
     <!-- STYLE TYLKO DLA TESTOW -->
       <div id="selectQuizWrapper" class="container flexBox">
         <div id="selectQuizMainBox" class="container text-center">
@@ -72,19 +76,19 @@
             <!-- Tu idzie pytanie -->
           </div>
           <br><br><br>
-          <div class="row flexBox">
-            <div id="answer1QuizMainBox" class="col-md-6 answerQuizMainBox">
+          <div class="col-md-12">
+            <div id="answer1QuizMainBox" class="col-md-5 answerQuizMainBox">
               <!-- Tu idzie odpowiedz -->
             </div>
-            <div id="answer2QuizMainBox" class="col-md-6 answerQuizMainBox">
+            <div id="answer2QuizMainBox" class="col-md-5 col-md-offset-2 answerQuizMainBox">
               <!-- Tu idzie odpowiedz -->
             </div>
-          </div>
-          <div class="row">
-            <div id="answer3QuizMainBox" class="col-md-6 answerQuizMainBox">
+          <!-- </div> -->
+          <!-- <div class="row"> -->
+            <div id="answer3QuizMainBox" class="col-md-5 answerQuizMainBox">
               <!-- Tu idzie odpowiedz -->
             </div>
-            <div id="answer4QuizMainBox" class="col-md-6 answerQuizMainBox">
+            <div id="answer4QuizMainBox" class="col-md-5 col-md-offset-2 answerQuizMainBox">
               <!-- Tu idzie odpowiedz -->
             </div>
           </div>
@@ -95,8 +99,9 @@
           </div>
         </div>
 
-        <div id="resultsAfterQuiz" class="container flexBox hide" style="border-radius: 12px solid #fff; border-radius: 12px;">
-
+        <div id="resultsAfterQuiz" class="container hide" style="border-radius: 12px solid #fff; border-radius: 12px;">
+          <h1>Wyniki Quizu</h1>
+          <hr>
         </div>
       </div>
     </div>

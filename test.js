@@ -57,11 +57,11 @@ function loadStudents() {
 		var extname = path.extname(file);
 		if(extname === ".txt") {
 			var content = fs.readFileSync(__dirname+"/Klasy/"+file, "utf-8");
-			// json[file] = content;
 			json[file.slice(0, -4)] = {};
 			content = content.split(/\r?\n/);
 			for(var i=0; i<content.length; i++) {
-				json[file.slice(0, -4)][i+1] = content[i].slice(3); 
+				var temp = content[i].split('. ');
+				json[file.slice(0, -4)][temp[0]] = temp[1]; 
 			}
 		}
 	});

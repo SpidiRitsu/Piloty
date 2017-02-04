@@ -1,7 +1,0 @@
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Pytanie z wiecej{-}niz dwoma{-}linijkami{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}1{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Tylko 1 linia{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}4{V}
-Testowe pytani{||}Odp 1{||}Odp 2{||}Odp 3{||}Odp 4{||}3{V}

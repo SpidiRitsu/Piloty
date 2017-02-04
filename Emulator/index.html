@@ -40,31 +40,53 @@
           var regex = /[^0-9/.-]/g;
           console.log(remoteId);
           if(remoteId === "" || remoteCode === "") {
-            console.error("NO CONTENT!");
+            // console.error("NO CONTENT!");
+            sendError("NO CONTENT!", "red");
             return;
           }
           else if(regex.test(remoteCode)) {
-            console.error("SPECIAL CHARACTERS");
+            // console.error("SPECIAL CHARACTERS");
+            sendError("SPECIAL CHARACTERS", "red");
             return;
           }
           else {
             $.post("/emulatorSendCode", {id: remoteId, code: remoteCode})
+            sendError("SUCCESS!", "green");
           }
         });
+
+        $(".enterClick").keypress(function (e) {
+          if (e.keyCode == 13)
+            $("#sendCode").click();
+        });
       });
+
+      function sendError(text, color="red") {
+        if (text !== undefined) {
+          $("#errorBox").css("color",color);
+          $("#errorBox").empty();
+          $("#errorBox").html(text); 
+        }
+        else {
+          $("#errorBox").empty();
+        }
+      }
     </script>
   </head>
   <body>
     <div id="mainBox" class="container text-center">
-      <h1>Emulator<small><br>Kontroler glowny wyrzuca kod "0b"w przypadku bledu?</small></h1>
+      <h1>Emulator</h1>
+      <br>
       <!-- <input id="remoteId" class="text-center" type="text" name="id" value="" placeholder="id"> -->
-      <select class="" id="remoteId"></select>
+      <select class="enterClick" id="remoteId"></select>
       <br><br>
-      <input id="remoteCode" class="text-center" type="text" name="code" value="" placeholder="code (max 6 digits)">
+      <input id="remoteCode" class="text-center enterClick" type="text" name="code" value="" placeholder="code (max 6 digits)">
       <br>
       <button id="sendCode" type="button" class="btn btn-default">
         SEND
       </button>
+      <br><br>
+      <div id="errorBox" class="col-xs-12 col-md-12" style="font-weight: 700; font-size: 20px;"></div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

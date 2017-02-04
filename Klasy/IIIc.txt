@@ -1,0 +1,10 @@
+1. Uczeń Pierwszy
+2. Uczeń Drugi
+3. Uczeń Trzeci
+4. Uczeń Czwarty
+5. Uczeń Piaty
+6. Uczeń Szósty
+7. Uczeń Siódmy
+8. Uczeń Ósmy
+9. Uczeń Dziewiąty
+10. Uczeń Dziesiąty

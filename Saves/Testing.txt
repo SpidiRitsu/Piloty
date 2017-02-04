@@ -1,6 +1,0 @@
-Pytanie z wiecej{-}niz jedna linijka :D{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}3{||}{V}
-Pytanie z wiecej{-}niz jedna linijka :D{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}3{||}{V}
-Pytanie z wiecej{-}niz jedna linijka :D{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}3{||}{V}
-Inne pytanie{-}z tymi samymi odpowiedziami{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}4{||}{V}
-Inne pytanie{-}z tymi samymi odpowiedziami{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}4{||}{V}
-Inne pytanie{-}z tymi samymi odpowiedziami{||}Odpowiedz{-}numer 1{||}Odpowiedz numer 2{||}Odpowiedz numer 3{||}Odpowiedz numer 4{||}4{||}{V}

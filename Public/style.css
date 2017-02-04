@@ -247,14 +247,18 @@ input {
   border: 12px solid #fff;
   border-radius: 12px;
   margin-top: 30px;
-  max-height: 100px;
+  margin-bottom: 50px;
+  height: auto;
+  overflow: hidden;
 }
 .answerQuizMainBox {
   font-size: 0.7em;
-  border: 12px solid #fff;
+  border: 8px solid #fff;
   border-radius: 12px;
+  margin-bottom: 50px;
+  height: auto !important;
+  overflow: hidden;
   /*width: auto;*/
-  /*height: auto;*/
 }
 /* USTAWIENIA */
 #Ustawienia {
@@ -282,4 +286,11 @@ input {
 .connectedDevice {
   font-size: 25px;
   /*margin: 10px;*/
+}
+.resultCorrectAnswerForQuestionSpan {
+  color: greenyellow;
+  font-size: 1.6em;
+}
+.resultStudentsNumber {
+  font-size: 1.3em;
 }
