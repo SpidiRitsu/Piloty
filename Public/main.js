@@ -342,6 +342,8 @@ function reloadVoters(voters) {
 
 function loadQuestionAndAnswersFromQuiz(file, index) {
   if(index === file.length) {
+    //OVERFLOW DO QUIZ!:
+    $("#Quiz").css("overflow", "auto");
     console.log(sessionAnswers);
     $("#quizMainBox").addClass("hide");
     $("#resultsAfterQuiz").removeClass("hide");
