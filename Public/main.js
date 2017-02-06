@@ -279,6 +279,7 @@ $(document).ready(function() {
                 // sessionCorrectAnswers[quizIndex-1]++;
                 sessionCorrectAnswers[quizIndex-1].push(pilotId);
                 remotesCorrectAnswers[pilotId]["points"]++;
+                console.log(remotesCorrectAnswers);
             }
 
             alreadyUsed.push(pilotId);
@@ -361,10 +362,19 @@ function loadQuestionAndAnswersFromQuiz(file, index) {
     var quizingStudents = [];
     var pilotsSorted = [];
     for(key in remotesInQuiz) {
-      quizingStudents.push(remotesInQuiz[key]);
-      pilotsSorted.push(key);
+      quizingStudents.push(parseInt(remotesInQuiz[key]));
+      // pilotsSorted.push(key);
     }
-    quizingStudents.sort();
+    quizingStudents.sort(function (a, b) {
+      return a - b;
+    });
+    for(var i=0; i<quizingStudents.length; i++) {
+      for(key in remotesInQuiz) {
+        if (remotesInQuiz[key] == quizingStudents[i])
+          pilotsSorted.push(key);
+      }
+    }
+    console.log(quizingStudents);
     for(var i=0; i<quizingStudents.length; i++) {
       var temp = "uzyskał/a";
       if(students[selectedClass][quizingStudents[i]] !== undefined) {
@@ -373,16 +383,24 @@ function loadQuestionAndAnswersFromQuiz(file, index) {
         else
           temp = "uzyskał";
       }
-      var correctAnswersForQuestion = 0;
-      for(var j=0; j<sessionAnswers[i].length; j++) {
-        console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
-        console.log(sessionAnswers);
-        console.log(selectedQuiz);
-        if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
-          console.log("correct");
-          correctAnswersForQuestion = selectedQuiz[i][5];
-        }
-      }
+      // var correctAnswersForQuestion = 0;
+      // for(var j=0; j<sessionAnswers[i].length; j++) {
+      //   console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
+      //   console.log(sessionAnswers);
+      //   console.log(selectedQuiz);
+      //   if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
+      //     console.log("correct");
+      //     correctAnswersForQuestion = selectedQuiz[i][5];
+      //   }
+      // }
+      // console.log("quizingStudents: "+quizingStudents[i]);
+      // console.log(students[selectedClass]);
+      // console.log(students[selectedClass][quizingStudents[i]]);
+      // console.log(remotesCorrectAnswers);
+      // console.log(pilotsSorted);
+      // console.log("pilotsSorted[i]: "+pilotsSorted[i]);
+      // console.log(remotesCorrectAnswers[pilotsSorted[i]]);
+      // console.log("Points of upper pilot: "+remotesCorrectAnswers[pilotsSorted[i]]["points"]);
       $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>) ' + temp + ' punktów: <span class="resultCorrectAnswerForQuestionSpan">' + remotesCorrectAnswers[pilotsSorted[i]]["points"] + '</span><br><br></div>');
     }
 
