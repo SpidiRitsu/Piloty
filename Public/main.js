@@ -18,6 +18,8 @@ var everyone_connected = false;
 var remotesInQuiz = {};
 var correctAnswerForCurrentQuestion;
 var remotesCorrectAnswers = {};
+var showScoreboardAfterEachQuestion;
+var tempShowScoreboardAfterEachQuestion = false;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -156,10 +158,22 @@ $(document).ready(function() {
   $(".editBtn").click(function(btn) {
     console.log(btn.currentTarget.parentNode.parentNode);
   });
+  $(".radio-inline [name=showResultsAfterQuestion]").on("change", function(e) {
+    $(".greenyellowFont").removeClass("greenyellowFont");
+    $(e.target.parentElement).addClass("greenyellowFont");
+  });
+  $("body, html").keypress(function (e) {
+    if (e.keyCode == "32") {
+      if (showScoreboardAfterEachQuestion && !tempShowScoreboardAfterEachQuestion) {
+        $("#showScoreboardAfterEachQuestionButton").click();
+      }
+    }
+  });
   // QUIZ:
   $("#loadQuizSelectList").click(function() {
     var classCount;
     var selected = $("#importQuizSelectList").find(":selected").text();
+    showScoreboardAfterEachQuestion = ($("input[name=showResultsAfterQuestion]:checked").val() == "true");
     selectedQuiz = {};
     var foo = [];
     selectedQuiz[selected] = filesWithContent[selected+".txt"].split("{V}");
@@ -340,12 +354,24 @@ function reloadVoters(voters) {
   }
 }
 
-function loadQuestionAndAnswersFromQuiz(file, index) {
-  if(index === file.length) {
+function loadQuestionAndAnswersFromQuizANDreloadVoters() {
+  loadQuestionAndAnswersFromQuiz(selectedQuiz, quizIndex, true);
+  reloadVoters(fixedRemotesUsed);
+}
+
+function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
+  if((index === file.length || tempShowScoreboardAfterEachQuestion) && nextQuestion === undefined) {
+    tempShowScoreboardAfterEachQuestion = false;
     //OVERFLOW DO QUIZ!:
     $("#Quiz").css("overflow", "auto");
     console.log(sessionAnswers);
     $("#quizMainBox").addClass("hide");
+    if (index === file.length && showScoreboardAfterEachQuestion) {
+      $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po wszystkich pytaniach</h1><hr>");
+    }
+    else if (showScoreboardAfterEachQuestion) {
+      $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po pytaniu: <span style='color: greenyellow; font-size: 1.3em'>" + quizIndex +"</span><br><button id='showScoreboardAfterEachQuestionButton' type='button' class='btn btn-primary btn-lg' onclick='loadQuestionAndAnswersFromQuizANDreloadVoters();'>następne pytanie (spacebar)</button></h1><hr>");
+    }
     $("#resultsAfterQuiz").removeClass("hide");
     // for(let i=0; i<sessionAnswers.length; i++) {
     //   var correctAnswersForQuestion = 0;
@@ -408,13 +434,20 @@ function loadQuestionAndAnswersFromQuiz(file, index) {
 
   }
   else {
-    $("#questionQuizMainBox").html(file[index][0]);
+    quizIndex++;
+    $("#Quiz").css("overflow", "hidden");
+    $("#quizMainBox").removeClass("hide");
+    $("#resultsAfterQuiz").addClass("hide");
+    $("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
     for(var i=1; i<5; i++) {
       $("#answer"+i+"QuizMainBox").html(file[index][i]);
     }
-    quizIndex++;
+    // console.log(quizIndex + " QUIZ INDEX!!!");
     correctAnswerForCurrentQuestion = parseInt(file[index][5]);
     console.log("POPRAWNA ODPOEIDZ: "+file[index][5]);
+    if (showScoreboardAfterEachQuestion) {
+      tempShowScoreboardAfterEachQuestion = true;
+    }
   }
 }
 

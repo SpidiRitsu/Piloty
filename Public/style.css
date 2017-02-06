@@ -294,3 +294,9 @@ input {
 .resultStudentsNumber {
   font-size: 1.3em;
 }
+.whiteFont {
+  color: #fff;
+}
+.greenyellowFont {
+  color: greenyellow;
+}
