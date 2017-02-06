@@ -91,7 +91,7 @@ function main() {
   app.post("/emulatorSendCode", function(req, res) {
     var remoteId = req.body.id;
     var remoteCode = req.body.code;
-    console.log(remoteId, remoteCode);
+    // console.log(remoteId, remoteCode);
     emulatorCodeTranslation(remoteId, remoteCode);
     // io.emit("emulatorCode", remoteId, remoteCode);
     res.writeHead(200, {"Content-Type": "text/plain"});
@@ -225,7 +225,7 @@ function poll(device, counter) { //3 argument "server"
 		}
 		else {
 		//console.log(data)
-		console.log("["+counter+"]------------------------------------------");
+		// console.log("["+counter+"]------------------------------------------");
 		parseData(data); // 2 argument "server"
 		}
 		//console.log("------------------------------------------")
@@ -259,9 +259,9 @@ function parseData(data) { //tu byl drugi argument "server"
 		return item !== "00";
 	});
 	pilot.Id = data.shift() + data.shift();
-	console.log("Header: "+pilot.Header);
+	// console.log("Header: "+pilot.Header);
 	console.log("ID: "+pilot.Id);
-	console.log(data);
+	// console.log(data);
 	var translatedData = [];
 	for(var key in encryptionData) {
 		for(var i=0; i<data.length; i++) {
@@ -270,14 +270,14 @@ function parseData(data) { //tu byl drugi argument "server"
 		}
 	}
 	if(translatedData.length !== 0 && pilot.Header === "03280000") {
-		console.log("Code sent: "+translatedData.join(''));
+		// console.log("Code sent: "+translatedData.join(''));
 		io.emit("emitTranslatedCode", pilot.Id, translatedData.join(''));
 	}
 	if(pilot.Header === "01148000" && data.join('') === "03") {
 		console.log("EMITTING STOP QUIZING: "+data.join(''));
 		io.emit("emitTranslatedCode", pilot.Id, data.join(''));
 	}
-	console.log(data.join(''));
+	// console.log(data.join(''));
 	var codeKappa = data.join('');
 	if(codeKappa=="2006" || codeKappa=='2005') {
 		io.emit("kappa", codeKappa);
