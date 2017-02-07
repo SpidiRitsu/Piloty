@@ -440,7 +440,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
     $("#resultsAfterQuiz").addClass("hide");
     $("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
     for(var i=1; i<5; i++) {
-      $("#answer"+i+"QuizMainBox").html(file[index][i]);
+      $("#answer"+i+"QuizMainBox").html(i + ". " + file[index][i]);
     }
     // console.log(quizIndex + " QUIZ INDEX!!!");
     correctAnswerForCurrentQuestion = parseInt(file[index][5]);
