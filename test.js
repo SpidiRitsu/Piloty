@@ -78,6 +78,7 @@ function main() {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  //app.enable('trust proxy');
 
 	app.use(express.static(__dirname+"/Public"));
 
@@ -86,6 +87,14 @@ function main() {
 	});
   app.get("/emulator", function (req,res) {
     res.sendFile(__dirname+"/Emulator/index.html");
+  });
+
+  app.get("/smartphones", function (req,res) {
+  	res.sendFile(__dirname+"/Emulator/smartphones.html");
+  });
+
+  app.post("/smartphoneSendCode", function (req, res) {
+  	res.send(req.ip);
   });
 
   app.post("/emulatorSendCode", function(req, res) {

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smartphone Emulator</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Caveat+Brush" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    		$(".btn").click(function() {
+    			let val = $(this)[0].attributes.value.value;
+    			let inputBox = $("#inputBox").text();
+    			if (inputBox === "INPUT BOX") {
+    				inputBox = "";
+    			}
+    			else if (inputBox === "") {
+    				inputBox = "INPUT BOX";
+    			}
+    			switch (val) {
+    				case "SEND": {
+    					$.post("/smartphoneSendCode", function(ip) {
+    						let arr = ip.split(".");
+    						alert(arr[arr.length-1]);
+    						console.log(ip);
+    					});
+    				}; break;
+    				case "C": {
+    					if (inputBox.slice(0, -1) === "") {
+    						$("#inputBox").text("INPUT BOX");
+    					}
+    					else {
+    						$("#inputBox").text(inputBox.slice(0, -1));
+    					}
+    				}; break;
+    				default: {
+    					if (inputBox.length < 6) {
+    						inputBox += val;
+    						$("#inputBox").text(inputBox);
+    					}
+    				}; break;
+    			}
+    		});
+    	});
+    </script>
+
+    <style>
+    	body {
+    		background-color: #000;
+    		color: #fff;
+    		font-family: 'Caveat Brush', cursive;
+    		outline: none !important;
+    	}
+    	#mainWrapper {
+    		border: 6px solid #fff;
+    		/*border-radius: 6px;*/
+    		padding: 30px;
+    	}
+    	#inputBox {
+    		background-color: dodgerblue;
+    		font-size: 24px;
+    		border-radius: 12px;
+    		border: 1px solid #000;
+    	}
+    	.btn {
+    		border: 1px solid #000;
+    	}
+    </style>
+  </head>
+<body>
+	<div id="mainWrapper" class="col-xs-12 text-center" style="background-color: darkslategray;">
+		<div id="inputBox" class="col-xs-10 col-xs-offset-1">INPUT BOX</div>
+		<div class="col-xs-6 col-xs-offset-3 btn btn-outline btn-warning btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="SEND">SEND</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg" value="1">1</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="2">2</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="3">3</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg" value="4">4</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="5">5</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="6">6</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg" value="7">7</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="8">8</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="9">9</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg" value="/">/</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value="0">0</div>
+			<div class="col-xs-4 btn btn-default btn-lg" value=".">.</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 btn btn-default" value="-">-</div>
+			<div class="col-xs-6 btn btn-default" value="C">C</div>
+		</div>
+		<div>
+			<br>
+			<p style="font-size: 10px;">
+			I USE YOUR DATA!
+			</p>
+		</div>
+	</div>
+</body>
+</html>

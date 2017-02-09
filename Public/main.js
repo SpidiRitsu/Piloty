@@ -20,6 +20,8 @@ var correctAnswerForCurrentQuestion;
 var remotesCorrectAnswers = {};
 var showScoreboardAfterEachQuestion;
 var tempShowScoreboardAfterEachQuestion = false;
+var quizIsFinished = false;
+var doNotShowNextQuestion = false;
 
 $(document).ready(function() {
   //TO PONIZEJ DO NAPRAWY BUGA W FIREFOXIE!
@@ -165,6 +167,7 @@ $(document).ready(function() {
   $("body, html").keypress(function (e) {
     if (e.keyCode == "32") {
       if (showScoreboardAfterEachQuestion && !tempShowScoreboardAfterEachQuestion) {
+        doNotShowNextQuestion = false;
         $("#showScoreboardAfterEachQuestionButton").click();
       }
     }
@@ -360,93 +363,101 @@ function loadQuestionAndAnswersFromQuizANDreloadVoters() {
 }
 
 function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
-  if((index === file.length || tempShowScoreboardAfterEachQuestion) && nextQuestion === undefined) {
-    tempShowScoreboardAfterEachQuestion = false;
-    //OVERFLOW DO QUIZ!:
-    $("#Quiz").css("overflow", "auto");
-    console.log(sessionAnswers);
-    $("#quizMainBox").addClass("hide");
-    if (index === file.length && showScoreboardAfterEachQuestion) {
-      $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po wszystkich pytaniach</h1><hr>");
-    }
-    else if (showScoreboardAfterEachQuestion) {
-      $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po pytaniu: <span style='color: greenyellow; font-size: 1.3em'>" + quizIndex +"</span><br><button id='showScoreboardAfterEachQuestionButton' type='button' class='btn btn-primary btn-lg' onclick='loadQuestionAndAnswersFromQuizANDreloadVoters();'>następne pytanie (spacebar)</button></h1><hr>");
-    }
-    $("#resultsAfterQuiz").removeClass("hide");
-    // for(let i=0; i<sessionAnswers.length; i++) {
-    //   var correctAnswersForQuestion = 0;
-    //   for(var j=0; j<sessionAnswers[i].length; j++) {
-    //     console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
-    //     if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
-    //       console.log("correct");
-    //       correctAnswersForQuestion = selectedQuiz[i][5];
-    //     }
-    //   }
-    //   $("#resultsAfterQuiz").append(
-    //     // "Pytanie "+(i+1)+": "+sessionAnswers[i]+"<br>"
-    //     "Na pytanie "+(i+1)+" poprawej odpowiedzi udzielilo: "+sessionCorrectAnswers[i]+"<br>"
-    //   );
-    // }
-    var quizingStudents = [];
-    var pilotsSorted = [];
-    for(key in remotesInQuiz) {
-      quizingStudents.push(parseInt(remotesInQuiz[key]));
-      // pilotsSorted.push(key);
-    }
-    quizingStudents.sort(function (a, b) {
-      return a - b;
-    });
-    for(var i=0; i<quizingStudents.length; i++) {
-      for(key in remotesInQuiz) {
-        if (remotesInQuiz[key] == quizingStudents[i])
-          pilotsSorted.push(key);
+  if (!quizIsFinished) {
+    if((index === file.length || tempShowScoreboardAfterEachQuestion) && nextQuestion === undefined) {
+      tempShowScoreboardAfterEachQuestion = false;
+      if (index === file.length) {
+        quizIsFinished = true;
       }
-    }
-    console.log(quizingStudents);
-    for(var i=0; i<quizingStudents.length; i++) {
-      var temp = "uzyskał/a";
-      if(students[selectedClass][quizingStudents[i]] !== undefined) {
-        if (students[selectedClass][quizingStudents[i]].split(' ')[0].slice(-1) === 'a')
-          temp = "uzyskała";
-        else
-          temp = "uzyskał";
+      //OVERFLOW DO QUIZ!:
+      $("#Quiz").css("overflow", "auto");
+      console.log(sessionAnswers);
+      $("#quizMainBox").addClass("hide");
+      if (index === file.length && showScoreboardAfterEachQuestion) {
+        $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po wszystkich pytaniach</h1><hr>");
       }
-      // var correctAnswersForQuestion = 0;
-      // for(var j=0; j<sessionAnswers[i].length; j++) {
-      //   console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
-      //   console.log(sessionAnswers);
-      //   console.log(selectedQuiz);
-      //   if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
-      //     console.log("correct");
-      //     correctAnswersForQuestion = selectedQuiz[i][5];
+      else if (showScoreboardAfterEachQuestion) {
+        doNotShowNextQuestion = true;
+        $("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po pytaniu: <span style='color: greenyellow; font-size: 1.3em'>" + quizIndex +"</span><br><button id='showScoreboardAfterEachQuestionButton' type='button' class='btn btn-primary btn-lg' onclick='loadQuestionAndAnswersFromQuizANDreloadVoters();'>następne pytanie (spacebar)</button></h1><hr>");
+      }
+      $("#resultsAfterQuiz").removeClass("hide");
+      // for(let i=0; i<sessionAnswers.length; i++) {
+      //   var correctAnswersForQuestion = 0;
+      //   for(var j=0; j<sessionAnswers[i].length; j++) {
+      //     console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
+      //     if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
+      //       console.log("correct");
+      //       correctAnswersForQuestion = selectedQuiz[i][5];
+      //     }
       //   }
+      //   $("#resultsAfterQuiz").append(
+      //     // "Pytanie "+(i+1)+": "+sessionAnswers[i]+"<br>"
+      //     "Na pytanie "+(i+1)+" poprawej odpowiedzi udzielilo: "+sessionCorrectAnswers[i]+"<br>"
+      //   );
       // }
-      // console.log("quizingStudents: "+quizingStudents[i]);
-      // console.log(students[selectedClass]);
-      // console.log(students[selectedClass][quizingStudents[i]]);
-      // console.log(remotesCorrectAnswers);
-      // console.log(pilotsSorted);
-      // console.log("pilotsSorted[i]: "+pilotsSorted[i]);
-      // console.log(remotesCorrectAnswers[pilotsSorted[i]]);
-      // console.log("Points of upper pilot: "+remotesCorrectAnswers[pilotsSorted[i]]["points"]);
-      $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>) ' + temp + ' punktów: <span class="resultCorrectAnswerForQuestionSpan">' + remotesCorrectAnswers[pilotsSorted[i]]["points"] + '</span><br><br></div>');
-    }
+      var quizingStudents = [];
+      var pilotsSorted = [];
+      for(key in remotesInQuiz) {
+        quizingStudents.push(parseInt(remotesInQuiz[key]));
+        // pilotsSorted.push(key);
+      }
+      quizingStudents.sort(function (a, b) {
+        return a - b;
+      });
+      for(var i=0; i<quizingStudents.length; i++) {
+        for(key in remotesInQuiz) {
+          if (remotesInQuiz[key] == quizingStudents[i])
+            pilotsSorted.push(key);
+        }
+      }
+      console.log(quizingStudents);
+      for(var i=0; i<quizingStudents.length; i++) {
+        var temp = "uzyskał/a";
+        if(students[selectedClass][quizingStudents[i]] !== undefined) {
+          if (students[selectedClass][quizingStudents[i]].split(' ')[0].slice(-1) === 'a')
+            temp = "uzyskała";
+          else
+            temp = "uzyskał";
+        }
+        // var correctAnswersForQuestion = 0;
+        // for(var j=0; j<sessionAnswers[i].length; j++) {
+        //   console.log(sessionAnswers[i][j]+" === "+parseInt(selectedQuiz[i][5]));
+        //   console.log(sessionAnswers);
+        //   console.log(selectedQuiz);
+        //   if(sessionAnswers[i][j] === parseInt(selectedQuiz[i][5])) {
+        //     console.log("correct");
+        //     correctAnswersForQuestion = selectedQuiz[i][5];
+        //   }
+        // }
+        // console.log("quizingStudents: "+quizingStudents[i]);
+        // console.log(students[selectedClass]);
+        // console.log(students[selectedClass][quizingStudents[i]]);
+        // console.log(remotesCorrectAnswers);
+        // console.log(pilotsSorted);
+        // console.log("pilotsSorted[i]: "+pilotsSorted[i]);
+        // console.log(remotesCorrectAnswers[pilotsSorted[i]]);
+        // console.log("Points of upper pilot: "+remotesCorrectAnswers[pilotsSorted[i]]["points"]);
+        $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>) ' + temp + ' punktów: <span class="resultCorrectAnswerForQuestionSpan">' + remotesCorrectAnswers[pilotsSorted[i]]["points"] + '</span><br><br></div>');
+      }
 
-  }
-  else {
-    quizIndex++;
-    $("#Quiz").css("overflow", "hidden");
-    $("#quizMainBox").removeClass("hide");
-    $("#resultsAfterQuiz").addClass("hide");
-    $("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
-    for(var i=1; i<5; i++) {
-      $("#answer"+i+"QuizMainBox").html(i + ". " + file[index][i]);
     }
-    // console.log(quizIndex + " QUIZ INDEX!!!");
-    correctAnswerForCurrentQuestion = parseInt(file[index][5]);
-    console.log("POPRAWNA ODPOEIDZ: "+file[index][5]);
-    if (showScoreboardAfterEachQuestion) {
-      tempShowScoreboardAfterEachQuestion = true;
+    else {
+      if (!doNotShowNextQuestion) {
+        quizIndex++;
+        $("#Quiz").css("overflow", "hidden");
+        $("#quizMainBox").removeClass("hide");
+        $("#resultsAfterQuiz").addClass("hide");
+        $("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
+        for(var i=1; i<5; i++) {
+          $("#answer"+i+"QuizMainBox").html(i + ". " + file[index][i]);
+        }
+        // console.log(quizIndex + " QUIZ INDEX!!!");
+        correctAnswerForCurrentQuestion = parseInt(file[index][5]);
+        console.log("POPRAWNA ODPOEIDZ: "+file[index][5]);
+        if (showScoreboardAfterEachQuestion) {
+          tempShowScoreboardAfterEachQuestion = true;
+        }
+      }
     }
   }
 }
