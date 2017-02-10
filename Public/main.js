@@ -286,7 +286,7 @@ $(document).ready(function() {
             //   "Na odpowiedz 4 glosu udzielilo: "+sessionAnswers[3]+" osob!<br>"
             // );
           }
-          else if((code>=1 && code<=4 && remotesInQuiz.hasOwnProperty(pilotId)) || (code === remotesKey && remotesInQuiz.hasOwnProperty(pilotId))) {
+          else if(((code>=1 && code<=4 && remotesInQuiz.hasOwnProperty(pilotId)) || (code === remotesKey && remotesInQuiz.hasOwnProperty(pilotId))) && !doNotShowNextQuestion) {
             if(code >=1 && code <=4) 
               sessionAnswers[quizIndex-1][code-1]++;
             else if(code === remotesKey)
