@@ -80,10 +80,10 @@ function main(appId) {
   	var bodyParser = require("body-parser");
   	var cookieParser = require('cookie-parser');
 
-  app.use(cookieParser());
+  app.use(cookieParser("secret?"));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  //app.enable('trust proxy');
+  app.enable('trust proxy');
 
 	app.use(express.static(__dirname+"/Public"));
 
@@ -100,21 +100,51 @@ function main(appId) {
   	res.sendFile(__dirname+"/Emulator/smartphones.html");
   });
 
-  app.post("/smartphones/setCookiesAndStudents", function (req, res) {
-  	var cookies = req.cookies;
-  	var deviceId = shortid.generate();
+  app.post("/smartphoneSetCookiesAndStudents", function (req, res) {
+    let cookies = req.signedCookies;
+  	let deviceId = cookies['deviceId'];
   	if (cookies['appId'] === undefined || cookies['appId'] !== appId) {
-  		res.cookie('deviceId', deviceId, {maxAge: 43200000})
-  			.cookie('appId', appId, {maxAge: 43200000});
+  		deviceId = shortid.generate();
+  		res.cookie('deviceId', deviceId, {maxAge: 43200000, signed: true})
+  			.cookie('appId', appId, {maxAge: 43200000, signed: true});
   	}
   	else if (cookies['deviceId'] === undefined) {
-  		res.cookie('deviceId', shortid.generate(), {maxAge: 43200000});
+  		deviceId = shortid.generate();
+  		res.cookie('deviceId', deviceId, {maxAge: 43200000, signed: true});
   	}
-  	res.send(loadStudents());
+  	res.json({
+  		students: loadStudents(),
+  		user: cookies['user'],
+  		userData: {
+  			deviceId: deviceId,
+  			ip: req.ip,
+  			software: req.headers['user-agent'].split('(')[1].split(')')[0]
+  		}
+  	});
+  });
+
+  app.post("/smartphoneDeleteCookies", function (req, res) {
+  	let cookies = req.signedCookies;
+  	for(let key in cookies) {
+  		res.clearCookie(key);
+  	}
+  	res.end();
+  });
+
+  app.post("/smartphoneSetUser", function (req, res) {
+  	let username = req.body.name;
+    let userclass = req.body.class;
+	let usernumber = req.body.number;
+	res.cookie('user', JSON.stringify({
+		'username': username,
+		'userclass': userclass,
+		'usernumber': usernumber
+	}), {signed: true});
+  	res.end();
   });
 
   app.post("/smartphoneSendCode", function (req, res) {
-  	var cookies = req.cookies;
+  	var cookies = req.signedCookies;
   	var smartphoneId = cookies['deviceId'];
   	var smartphoneCode = req.body.code;
   	if (cookies['appId'] === appId) {

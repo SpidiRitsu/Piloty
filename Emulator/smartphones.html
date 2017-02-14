@@ -7,32 +7,36 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Caveat+Brush" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- PLAN:
-        - dodac ciastka by nie trzeba bylo za kazdym razem wybierac siebie ....
-        - dodac cos jak ustawienia by mozna bylo recznie usuwac ciastka
-    -->
-
     <script type="text/javascript">
         let students;
     	$(document).ready(function() {
-            $.post('/smartphones/setCookiesAndStudents', function (json) {
-                students = json;
-                $("#classList").empty();
-                for(let key in students) {
-                    $("#classList").append("<option>" + key + "</option>");
+            $.post('/smartphoneSetCookiesAndStudents', function (json) {
+                students = json['students'];
+                if(json['user'] !== undefined) {
+                    let user = JSON.parse(json['user']);
+                    if (user['username'] !== undefined && user['userclass'] !== undefined && user['usernumber'] !== undefined) {
+                        loadUser(user['username'], user['userclass'], user['usernumber']);
+                    }
                 }
-                for(let key in students[$("#classList").find(":selected").text()]) {
-                    $("#studentsList").append("<option>" + key + "</option>");
+                else {
+                    $("#classList").empty();
+                    for(let key in students) {
+                        $("#classList").append("<option>" + key + "</option>");
+                    }
                 }
+                $("#kbdDeviceId").html(json['userData']['deviceId']);
+                $("#kbdIP").html(json['userData']['ip']);
+                $("#kbdSoftware").html(json['userData']['software']);
             });
             $("#confirmClassList").click(function() {
                 $("#studentsList").empty();
@@ -42,54 +46,81 @@
             });
             $("#confirmStudentsList").click(function() {
                 $("#imieNazwisko").text(students[$("#classList").find(":selected").text()][$("#studentsList").find(":selected").text()]);
-                if ($("#confirmButton").is(":disabled"))
-                    $("#confirmButton").attr("disabled", false);
+                if ($("#studentsList").find(":selected").text() !== "N/A") {
+                    if ($("#confirmButton").is(":disabled"))
+                        $("#confirmButton").attr("disabled", false);
+                }
             });
             $("#confirmButton").click(function() {
-                $("#confirmedYou").text($("#imieNazwisko").text());
-                $("#confirmedClass").text($("#classList").find(":selected").text());
-                $("#confirmedNumber").text($("#studentsList").find(":selected").text());
-                $("#chooseClass").addClass("hide");
-                $("#mainWrapper").removeClass("hide");
+                let username = $("#imieNazwisko").text();
+                let userclass = $("#classList").find(":selected").text();
+                let usernumber = $("#studentsList").find(":selected").text();
+                let json = {
+                    'name': username, 
+                    'class': userclass, 
+                    'number': usernumber
+                };
+                $.post("/smartphoneSetUser", json);
+                loadUser(username, userclass, usernumber);
             });
-    		$(".btn").click(function() {
-    			let val = $(this)[0].attributes.value.value;
+            $("#sendBtn").click(function() {
+                let inputBox = $("#inputBox").text();
+                $.post("/smartphoneSendCode", {'code': inputBox}, function (err) {
+                   if (err) throw err;
+                }); 
+            });
+            $("#authorizeBtn").click(function() {
+                $.post("/smartphoneSendCode", {'code': './' + $("#confirmedNumber").text()}, function (err) {
+                  if (err) throw err;
+                 });
+            });
+    		$(".btn.sendable").click(function() {
+    			let value = $(this)[0].innerText;
     			let inputBox = $("#inputBox").text();
-                let template = "INPUT BOX";
-    			if (inputBox === "") {
-    				inputBox = template;
-    			}
-    			switch (val) {
-    				case "SEND": {
-                        if (inputBox !== template) {
-        					$.post("/smartphoneSendCode", {'code': inputBox}, function (err) {
-                                if (err) throw err;
-        					});                           
-                        }
-    				}; break;
-                    case "AUTHORIZE": {
-                        $.post("/smartphoneSendCode", {'code': './' + $("#confirmedNumber").text()}, function (err) {
-                            if (err) throw err;
-                        });
-                    }; break;
+    			switch (value) {
     				case "C": {
-    					if (inputBox.slice(0, -1) === "") {
-    						$("#inputBox").text("INPUT BOX");
-    					}
-    					else {
+    					if (inputBox.length > 0) {
     						$("#inputBox").text(inputBox.slice(0, -1));
     					}
     				}; break;
     				default: {
-                        if(inputBox === template)
-                            inputBox = "";
     					if (inputBox.length < 6) {
-    						inputBox += val;
+    						inputBox += value;
     						$("#inputBox").text(inputBox);
     					}
     				}; break;
     			}
     		});
+            $("#userBtn").click(function() {
+                $("#userModal").modal({backdrop: "static"});
+            });
+            $("#optionsBtn").click(function() {
+                $("#optionsModal").modal({backdrop: "static"});
+            });
+            $("#deleteCookiesBtn").click(function() {
+                $("#deleteCookiesBtn").addClass("hide");
+                $("#deleteCookiesConfirmationBox").removeClass("hide");
+                // $.post("/smartphoneDeleteCookies", function() {
+                //     location.reload(true);
+                // });
+            });
+            $("#confirmDeletingCookies").click(function() {
+                $.post("/smartphoneDeleteCookies", function() {
+                    location.reload(true);
+                });
+            });
+            $(".declineDeletingCookies").click(function() {
+                $("#deleteCookiesBtn").removeClass("hide");
+                $("#deleteCookiesConfirmationBox").addClass("hide");
+            });
+
+            function loadUser(username, userclass, usernumber) {
+                $("#confirmedYou, #kbdYou").text(username);
+                $("#confirmedClass, #kbdClass").text(userclass);
+                $("#confirmedNumber, #kbdNumber").text(usernumber);
+                $("#chooseClass").addClass("hide");
+                $("#mainWrapper").removeClass("hide");
+            };
     	});
     </script>
 
@@ -97,8 +128,8 @@
     	body {
     		background-color: darkslategray;
     		color: #fff;
-    		font-family: 'Caveat Brush', cursive;
-    		outline: none !important;
+    		font-family: 'Dosis', sans-serif;
+            outline: none !important;
     	}
     	#mainWrapper {
     		padding: 20px;
@@ -108,8 +139,10 @@
     		font-size: 24px;
     		border-radius: 12px;
     		border: 1px solid #000;
+            min-height: 36px;
     	}
     	.btn {
+            outline: none !important;
     		border: 1px solid #000;
     	}
         #chooseClass {
@@ -130,6 +163,29 @@
         #imieNazwisko {
             color: greenyellow;
         }
+        #optionsFlex {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        #optionsFlex > span {
+            margin-left: 15px;
+            margin-bottom: 10px;
+        }
+        .confirmed {
+            font-size: 1.5em;
+            color: greenyellow;
+        }
+        .modal {
+            color: #000;
+        }
+        .glyphicon {
+            font-size: 20px;
+        }
+        .modal-body {
+            font-size: 16px;
+        }
     </style>
   </head>
 <body>
@@ -144,38 +200,88 @@
         </div>
     </div>
 	<div id="mainWrapper" class="col-xs-12 text-center hide">
-        <div><span id="confirmedYou">N/A</span> <span id="confirmedClass">N/A</span> numer <span id="confirmedNumber">N/A</span></div>
-		<div id="inputBox" class="col-xs-10 col-xs-offset-1">INPUT BOX</div>
-		<div class="col-xs-8 btn btn-outline btn-warning btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="SEND">WYŚLIJ</div>
-        <div class="col-xs-4 btn btn-outline btn-success btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="AUTHORIZE">AUTORYZUJ</div>
+        <div id="optionsFlex"><span id="userBtn" class="glyphicon glyphicon-user"></span><span id="optionsBtn" class="glyphicon glyphicon-cog"></span></div>
+        <div><span id="confirmedYou" class="confirmed">N/A</span>, klasa: <span id="confirmedClass" class="confirmed">N/A</span>, numer: <span id="confirmedNumber" class="confirmed">N/A</span></div>
+		<div id="inputBox" class="col-xs-10 col-xs-offset-1"></div>
+		<div class="col-xs-7 btn btn-outline btn-warning btn-lg" style="margin-top: 10px; margin-bottom: 10px;" id="sendBtn">WYŚLIJ</div>
+        <div class="col-xs-5 btn btn-outline btn-success btn-lg" style="margin-top: 10px; margin-bottom: 10px;" id="authorizeBtn">AUTORYZUJ</div>
 		<div class="row">
-			<div class="col-xs-4 btn btn-default btn-lg" value="1">1</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="2">2</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="3">3</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="1">1</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="2">2</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="3">3</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-4 btn btn-default btn-lg" value="4">4</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="5">5</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="6">6</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="4">4</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="5">5</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="6">6</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-4 btn btn-default btn-lg" value="7">7</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="8">8</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="9">9</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="7">7</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="8">8</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="9">9</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-4 btn btn-default btn-lg" value="/">/</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value="0">0</div>
-			<div class="col-xs-4 btn btn-default btn-lg" value=".">.</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="/">/</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="0">0</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value=".">.</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-6 btn btn-default" value="-">-</div>
-			<div class="col-xs-6 btn btn-default" value="C">C</div>
+			<div class="col-xs-6 btn btn-default sendable" value="-">-</div>
+			<div class="col-xs-6 btn btn-default sendable" value="C">C</div>
 		</div>
 		<br>
         <div class="alert alert-info">
             Korzystając z tej aplikacji akceptujesz politykę cookies
         </div>
+    </div>
+
+    <div id="userModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <div class="modal-content text-center">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">TWOJE DANE</h4>
+          </div>
+          <div class="modal-body">
+            Imię i nazwisko: <kbd id="kbdYou"></kbd><br>
+            Klasa: <kbd id="kbdClass"></kbd><br>
+            Numer: <kbd id="kbdNumber"></kbd><br>
+            <hr>
+            ID urządzenia: <kbd id="kbdDeviceId"></kbd><br>
+            Adres IP: <kbd id="kbdIP"></kbd><br>
+            Oprogramowanie: <kbd id="kbdSoftware"></kbd>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="optionsModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <div class="modal-content text-center">
+          <div class="modal-header">
+            <button type="button" class="close declineDeletingCookies" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">USTAWIENIA</h4>
+          </div>
+          <div class="modal-body">
+            <button id="deleteCookiesBtn" type="button" class="btn btn-danger btn-block">USUŃ CIASTKA</button>
+            <div id="deleteCookiesConfirmationBox" class="hide">
+                <h3 style="margin-top: 0;">Czy napewno chcesz usunąć ciastka?<br><small style="font-size: 0.7em;">Po usunięciu ciastek, aplikacja nie będzie działać prawidłowo do czasu ponownego ustawienia identyfikatora!</small></h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <button id="confirmDeletingCookies" type="button" class="btn btn-danger btn-block">TAK</button>    
+                    </div>
+                    <div class="col-xs-6">
+                        <button id="declineDeletingCookies" type="button" class="btn btn-success btn-block declineDeletingCookies">NIE</button>    
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 </body>
 </html>
