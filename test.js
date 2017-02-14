@@ -2,6 +2,9 @@ module.exports = function() {
 var io;
 var fs = require("fs");
 var path = require("path");
+var shortid = require('shortid');
+var appId = shortid.generate();
+console.log(appId);
 function readQuestions() {
 	var questions = {};
 	fs.readdir(__dirname+"/Saves", function (err, files) {
@@ -68,14 +71,16 @@ function loadStudents() {
 	return json;
 }
 
-function main() {
+function main(appId) {
 	var express = require("express");
 	var app = express();
 	var server = require("http").Server(app);
 	io = require("socket.io")(server);
 	var opn = require("opn");
-  var bodyParser = require("body-parser");
+  	var bodyParser = require("body-parser");
+  	var cookieParser = require('cookie-parser');
 
+  app.use(cookieParser());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   //app.enable('trust proxy');
@@ -90,11 +95,34 @@ function main() {
   });
 
   app.get("/smartphones", function (req,res) {
+  	if (req.cookies['io'] !== undefined)
+  		res.clearCookie('io');
   	res.sendFile(__dirname+"/Emulator/smartphones.html");
   });
 
+  app.post("/smartphones/setCookiesAndStudents", function (req, res) {
+  	var cookies = req.cookies;
+  	var deviceId = shortid.generate();
+  	if (cookies['appId'] === undefined || cookies['appId'] !== appId) {
+  		res.cookie('deviceId', deviceId, {maxAge: 43200000})
+  			.cookie('appId', appId, {maxAge: 43200000});
+  	}
+  	else if (cookies['deviceId'] === undefined) {
+  		res.cookie('deviceId', shortid.generate(), {maxAge: 43200000});
+  	}
+  	res.send(loadStudents());
+  });
+
   app.post("/smartphoneSendCode", function (req, res) {
-  	res.send(req.ip);
+  	var cookies = req.cookies;
+  	var smartphoneId = cookies['deviceId'];
+  	var smartphoneCode = req.body.code;
+  	if (cookies['appId'] === appId) {
+  		emulateRemoteFromSmartphone(smartphoneId, smartphoneCode);
+  	}
+  	else {
+  		res.status(500).send('Something went wrong! [appId from device is not equal to appId] [deviceId: '+smartphoneId+ ' appId' +cookies['appId']);
+  	}
   });
 
   app.post("/emulatorSendCode", function(req, res) {
@@ -141,7 +169,7 @@ function main() {
 
 	app.post("/loadStudents", function (req, res) {
 		var json = loadStudents();
-		res.json(json); 
+		res.json(json);
 	});
 
 	io.on("connection", function(socket) {
@@ -186,6 +214,10 @@ function main() {
     myUsb.interface().claim();
     poll(myUsb,i); // 3 argument "io"
   }
+}
+
+function emulateRemoteFromSmartphone(remoteId, remoteCode) {
+	io.emit('emitTranslatedCode', remoteId, remoteCode);
 }
 
 function emulatorCodeTranslation(remoteId, remoteCode) {
@@ -297,5 +329,5 @@ function parseData(data) { //tu byl drugi argument "server"
 	//mouse(1,5,data);
 }
 
-main();
+main(appId);
 };

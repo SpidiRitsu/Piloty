@@ -16,25 +16,62 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!-- PLAN:
+        - dodac ciastka by nie trzeba bylo za kazdym razem wybierac siebie ....
+        - dodac cos jak ustawienia by mozna bylo recznie usuwac ciastka
+    -->
+
     <script type="text/javascript">
+        let students;
     	$(document).ready(function() {
+            $.post('/smartphones/setCookiesAndStudents', function (json) {
+                students = json;
+                $("#classList").empty();
+                for(let key in students) {
+                    $("#classList").append("<option>" + key + "</option>");
+                }
+                for(let key in students[$("#classList").find(":selected").text()]) {
+                    $("#studentsList").append("<option>" + key + "</option>");
+                }
+            });
+            $("#confirmClassList").click(function() {
+                $("#studentsList").empty();
+                for(let key in students[$("#classList").find(":selected").text()]) {
+                    $("#studentsList").append("<option>" + key + "</option>");
+                }
+            });
+            $("#confirmStudentsList").click(function() {
+                $("#imieNazwisko").text(students[$("#classList").find(":selected").text()][$("#studentsList").find(":selected").text()]);
+                if ($("#confirmButton").is(":disabled"))
+                    $("#confirmButton").attr("disabled", false);
+            });
+            $("#confirmButton").click(function() {
+                $("#confirmedYou").text($("#imieNazwisko").text());
+                $("#confirmedClass").text($("#classList").find(":selected").text());
+                $("#confirmedNumber").text($("#studentsList").find(":selected").text());
+                $("#chooseClass").addClass("hide");
+                $("#mainWrapper").removeClass("hide");
+            });
     		$(".btn").click(function() {
     			let val = $(this)[0].attributes.value.value;
     			let inputBox = $("#inputBox").text();
-    			if (inputBox === "INPUT BOX") {
-    				inputBox = "";
-    			}
-    			else if (inputBox === "") {
-    				inputBox = "INPUT BOX";
+                let template = "INPUT BOX";
+    			if (inputBox === "") {
+    				inputBox = template;
     			}
     			switch (val) {
     				case "SEND": {
-    					$.post("/smartphoneSendCode", function(ip) {
-    						let arr = ip.split(".");
-    						alert(arr[arr.length-1]);
-    						console.log(ip);
-    					});
+                        if (inputBox !== template) {
+        					$.post("/smartphoneSendCode", {'code': inputBox}, function (err) {
+                                if (err) throw err;
+        					});                           
+                        }
     				}; break;
+                    case "AUTHORIZE": {
+                        $.post("/smartphoneSendCode", {'code': './' + $("#confirmedNumber").text()}, function (err) {
+                            if (err) throw err;
+                        });
+                    }; break;
     				case "C": {
     					if (inputBox.slice(0, -1) === "") {
     						$("#inputBox").text("INPUT BOX");
@@ -44,6 +81,8 @@
     					}
     				}; break;
     				default: {
+                        if(inputBox === template)
+                            inputBox = "";
     					if (inputBox.length < 6) {
     						inputBox += val;
     						$("#inputBox").text(inputBox);
@@ -56,15 +95,13 @@
 
     <style>
     	body {
-    		background-color: #000;
+    		background-color: darkslategray;
     		color: #fff;
     		font-family: 'Caveat Brush', cursive;
     		outline: none !important;
     	}
     	#mainWrapper {
-    		border: 6px solid #fff;
-    		/*border-radius: 6px;*/
-    		padding: 30px;
+    		padding: 20px;
     	}
     	#inputBox {
     		background-color: dodgerblue;
@@ -75,12 +112,42 @@
     	.btn {
     		border: 1px solid #000;
     	}
+        #chooseClass {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        #wybierzSiebie {
+            justify-content: center;
+            align-items: center;
+        }
+        #classList, #studentsList {
+            color: black;
+        }
+        #imieNazwisko {
+            color: greenyellow;
+        }
     </style>
   </head>
 <body>
-	<div id="mainWrapper" class="col-xs-12 text-center" style="background-color: darkslategray;">
+    <div id="chooseClass" class="col-xs-12 text-center">
+        <div id="wybierzSiebie">
+            <div class="alert alert-info">
+                Po wybraniu klasy lub numeru <strong>obowiązkowo</strong> wciśnij <span class="glyphicon glyphicon-ok"></span> by zatwierdzić wybór!
+            </div>
+            <h2>Wybierz swoją klase i swój numer z dziennika</h2><br>
+            Klasa <select id="classList"><option>N/A</option></select> <span id="confirmClassList" class="glyphicon glyphicon-ok"></span> numer <select id="studentsList"><option>N/A</option></select> <span id="confirmStudentsList" class="glyphicon glyphicon-ok"></span><br>
+            <div id="confirmBox">Czy <span id="imieNazwisko">N/A</span> to ty?<br><button id="confirmButton" type="button" class="btn btn-lg btn-success btn-block" disabled>TAK</button></div>
+        </div>
+    </div>
+	<div id="mainWrapper" class="col-xs-12 text-center hide">
+        <div><span id="confirmedYou">N/A</span> <span id="confirmedClass">N/A</span> numer <span id="confirmedNumber">N/A</span></div>
 		<div id="inputBox" class="col-xs-10 col-xs-offset-1">INPUT BOX</div>
-		<div class="col-xs-6 col-xs-offset-3 btn btn-outline btn-warning btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="SEND">SEND</div>
+		<div class="col-xs-8 btn btn-outline btn-warning btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="SEND">WYŚLIJ</div>
+        <div class="col-xs-4 btn btn-outline btn-success btn-lg" style="margin-top: 10px; margin-bottom: 10px;" value="AUTHORIZE">AUTORYZUJ</div>
 		<div class="row">
 			<div class="col-xs-4 btn btn-default btn-lg" value="1">1</div>
 			<div class="col-xs-4 btn btn-default btn-lg" value="2">2</div>
@@ -105,12 +172,10 @@
 			<div class="col-xs-6 btn btn-default" value="-">-</div>
 			<div class="col-xs-6 btn btn-default" value="C">C</div>
 		</div>
-		<div>
-			<br>
-			<p style="font-size: 10px;">
-			I USE YOUR DATA!
-			</p>
-		</div>
-	</div>
+		<br>
+        <div class="alert alert-info">
+            Korzystając z tej aplikacji akceptujesz politykę cookies
+        </div>
+    </div>
 </body>
 </html>
