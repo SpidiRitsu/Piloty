@@ -214,20 +214,10 @@ function main(appId) {
 
 
 	// readQuestions();
-	server.listen(process.env.PORT || 3000);
-	if(process.env.PORT===undefined)
-		console.log("listening on port 3000");
-	else
-		console.log("listening on port " + process.env.PORT);
-	if(process.argv[2]==="open") {
-		if(process.env.PORT===undefined)
-			opn("http://localhost:3000");
-		else
-			opn("http://localhost:"+process.env.PORT);
-	}
-  if(process.argv[2]==="emulator" || process.argv[3]==="emulator") {
-
-  }
+	let port = (process.env.PORT || 3000)
+	server.listen(port, function() {
+		console.log('Listening on port '+port);
+	});
 
 	var usb = require("usb");
 	//var mouse = require("./mouse.js")(2,5)
