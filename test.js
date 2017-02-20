@@ -3,6 +3,7 @@ var io;
 var fs = require("fs");
 var path = require("path");
 var shortid = require('shortid');
+var validUrl = require('valid-url');
 var appId = shortid.generate();
 console.log(appId);
 function readQuestions() {
@@ -80,12 +81,16 @@ function main(appId) {
   	var bodyParser = require("body-parser");
   	var cookieParser = require('cookie-parser');
 
+  	var currentQuestion;
+  	var connectedRemotes = {};
+
   app.use(cookieParser("secret?"));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.enable('trust proxy');
 
 	app.use(express.static(__dirname+"/Public"));
+	app.use(express.static(__dirname+"/Emulator"));
 
 	app.get("/", function (req,res) {
 		res.sendFile(__dirname+"/Public/index.html");
@@ -95,14 +100,14 @@ function main(appId) {
   });
 
   app.get("/smartphones", function (req,res) {
-  	if (req.cookies['io'] !== undefined)
-  		res.clearCookie('io');
   	res.sendFile(__dirname+"/Emulator/smartphones.html");
   });
 
   app.post("/smartphoneSetCookiesAndStudents", function (req, res) {
     let cookies = req.signedCookies;
   	let deviceId = cookies['deviceId'];
+  	if (req.cookies['io'] !== undefined)
+  		res.clearCookie('io');
   	if (cookies['appId'] === undefined || cookies['appId'] !== appId) {
   		deviceId = shortid.generate();
   		res.cookie('deviceId', deviceId, {maxAge: 43200000, signed: true})
@@ -143,6 +148,35 @@ function main(appId) {
   	res.end();
   });
 
+  app.post('/smartphoneSetSettings', function (req,res) {
+  	let setting = req.body.setting;
+  	let value = req.body.value;
+  	let json;
+  	if (req.signedCookies['settings'] === undefined)
+  		json = {};
+  	else
+  		json = JSON.parse(req.signedCookies['settings']);
+  	if (typeof(setting) === 'object' && typeof(value) === 'object') {
+  		for(let i=0; i<setting.length; i++) {
+  			console.log(setting[i], value[i]);
+  			json[setting[i]] = value[i];
+  		}
+  	}
+  	console.log('updated settings:');
+  	console.log(json);
+  	res.cookie('settings', JSON.stringify(json), {signed: true});
+  	res.end();
+  });
+
+  app.post('/smartphoneReadSettings', function (req, res) {
+  	let cookies = new Promise(resolve => resolve(req.signedCookies));
+  	cookies.then(cookies => {
+  		console.log('read settings:');
+  		console.log(JSON.parse(cookies['settings']));
+  		res.send(JSON.parse(cookies['settings']));
+  	});
+  });
+
   app.post("/smartphoneSendCode", function (req, res) {
   	var cookies = req.signedCookies;
   	var smartphoneId = cookies['deviceId'];
@@ -151,8 +185,39 @@ function main(appId) {
   		emulateRemoteFromSmartphone(smartphoneId, smartphoneCode);
   	}
   	else {
-  		res.status(500).send('Something went wrong! [appId from device is not equal to appId] [deviceId: '+smartphoneId+ ' appId' +cookies['appId']);
+  		res.status(500);
   	}
+  });
+
+  app.post('/smartphoneReloadQuestion', function (req, res) {
+  	let deviceId = req.signedCookies['deviceId'];
+  	if (connectedRemotes !== undefined && connectedRemotes !== null) {
+  		if (Object.keys(connectedRemotes).indexOf(deviceId) !== -1)
+  			res.send(currentQuestion);
+  		else 
+			res.end();
+  	}
+  	else
+  		res.end();
+  });
+
+  app.post('/smartphoneConfirmId', function (req, res) {
+  	let deviceId = req.signedCookies['deviceId'];
+  	if (connectedRemotes !== undefined && connectedRemotes !== null) {
+	  	if (Object.keys(connectedRemotes).indexOf(deviceId) !== -1)
+	  		res.json({
+	  			bool: true,
+	  			deviceId: deviceId
+	  		});
+	  	else 
+			res.json({
+				bool: false,
+				deviceId: deviceId
+			});
+  	}
+  	else {
+  		res.end();
+  	} 
   });
 
   app.post("/emulatorSendCode", function(req, res) {
@@ -175,6 +240,18 @@ function main(appId) {
     // res.writeHead(200, {"Content-Type": "application/json"});
     // res.json(question);
     res.end();
+  });
+
+  app.post('/checkIfAnswersAreUrl', function(req, res) {
+  	var questions = req.body.questions;
+  	var arr = [];
+  	questions.forEach(function(q) {
+  		if(validUrl.isUri(q))
+  			arr.push('{i}'+q+'{I}');
+  		else
+  			arr.push(q);
+  	});
+  	res.send(arr);
   });
 
   app.post("/submitQuestionList", function(req,res) {
@@ -204,13 +281,23 @@ function main(appId) {
 
 	io.on("connection", function(socket) {
 		console.log("someone connected");
-		setInterval(function() {
-			io.emit("first emit", Math.random().toFixed(2));
-		},1000);
 		socket.on("disconnect", function() {
 			console.log("someone DISCONNECTED");
 		});
+		socket.on("send question to device", function(index, question, remotes) {
+			currentQuestion = {index: index, question: question};
+			connectedRemotes = remotes;
+			io.emit('question', {index: index, question: question}, connectedRemotes);
+		});
+		socket.on('everyone_connected', function (bool, remotes) {
+			connectedRemotes = remotes;
+			io.emit('everyoneConnected', bool);
+		});
+		socket.on('quizIsFinished', function (bool, json) {
+			io.emit('quizIsFinished', bool, json);
+		});
 	});
+
 
 
 	// readQuestions();

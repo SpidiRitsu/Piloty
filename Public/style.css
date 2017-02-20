@@ -300,3 +300,16 @@ input {
 .greenyellowFont {
   color: greenyellow;
 }
+.panel {
+  margin-bottom: 20px !important;
+}
+.panel-body, .panel-footer {
+  color: black;
+}
+.panel.panel-primary {
+  color: white;
+}
+#smartphoneQuizGroupsBox {
+  font-family: 'Russo One', sans-serif;
+  font-size: 18px;
+}
