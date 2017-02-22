@@ -1,6 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Bungee');
+/*@import url('https://fonts.googleapis.com/css?family=Bungee');
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
-@import url('https://fonts.googleapis.com/css?family=Russo+One');
+@import url('https://fonts.googleapis.com/css?family=Russo+One');*/
+
+@font-face {
+  font-family: "Bungee";
+  src: url(./fonts/Bungee/Bungee-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: "Josefin Sans";
+  src: url(./fonts/Josefin_Sans/JosefinSans-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: "Russo One";
+  src: url(./fonts/Russo_One/RussoOne-Regular.ttf) format('truetype');
+}
 
 body {
   width: 100%;

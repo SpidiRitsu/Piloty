@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Smartphone Emulator</title>
+
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<!-- <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet"> -->
+	<link rel="stylesheet" href="switch.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="./js/jquery-3.1.1.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+
+
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<script src="./smarthpones_js_compiled.js"></script>
+
+	<style>
+		@font-face {
+			font-family: "Dosis";
+			src: url(./fonts/Dosis/Dosis-Regular.ttf) format('truetype');
+		}
+		body {
+			background-color: darkslategray;
+			color: #fff;
+			font-family: 'Dosis', sans-serif;
+			outline: none !important;
+		}
+		#remoteWrapper, #mimicWrapper, #selfQuizWrapper {
+			padding: 20px;
+		}
+		#inputBox {
+			background-color: darkcyan;
+			font-size: 24px;
+			border-radius: 12px;
+			border: 1px solid #000;
+			min-height: 36px;
+		}
+		.btn {
+			outline: none !important;
+			border: 1px solid #000;
+		}
+		#chooseClass {
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 24px;
+		}
+		#wybierzSiebie {
+			justify-content: center;
+			align-items: center;
+		}
+		#classList, #studentsList {
+			color: black;
+		}
+		#imieNazwisko {
+			color: greenyellow;
+		}
+		.optionsFlex {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			align-items: center;
+		}
+		.optionsFlex > span {
+			margin-left: 15px;
+			margin-bottom: 10px;
+		}
+		.confirmed {
+			font-size: 1.5em;
+			color: greenyellow;
+		}
+		.modal {
+			color: #000;
+		}
+		.glyphicon {
+			font-size: 20px;
+		}
+		.modal-body {
+			font-size: 16px;
+		}
+		.switchDivFlex {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.switchDivFlex > span {
+			font-size: 1.2em;
+		}
+		#mimicQuizBox {
+			font-size: 20px;
+		}
+		.mimicQuizBoxBorder {
+			border-radius: 4px;
+			border: 1px solid #fff;
+			padding: 4px;
+		}
+		.mimicQuizBoxAnswer {
+			margin-bottom: 25px;
+		}
+		.btn-flex {
+			display: flex;
+			align-items: center;
+			justify-content: space-between; 
+		}
+		#afterMimicResults {
+			font-size: 20px;
+		}
+	 </style>
+  </head>
+<body>
+	<div id="chooseClass" class="col-xs-12 text-center hide">
+		<div id="wybierzSiebie">
+			<div class="alert alert-info">
+				Po wybraniu klasy lub numeru <strong>obowiązkowo</strong> wciśnij <span class="glyphicon glyphicon-ok"></span> by zatwierdzić wybór!
+			</div>
+			<h2>Wybierz swoją klase i swój numer z dziennika</h2><br>
+			Klasa <select id="classList"><option>N/A</option></select> <span id="confirmClassList" class="glyphicon glyphicon-ok"></span> numer <select id="studentsList"><option>N/A</option></select> <span id="confirmStudentsList" class="glyphicon glyphicon-ok"></span><br>
+			<div id="confirmBox">Czy <span id="imieNazwisko">N/A</span> to ty?<br><button id="confirmButton" type="button" class="btn btn-lg btn-success btn-block btn-flex" disabled>TAK <span class="glyphicon glyphicon-ok"></span></button></div>
+		</div>
+	</div>
+
+	<div id="remoteWrapper" class="col-xs-12 text-center hide">
+		<div class="optionsFlex"><span class="userBtn glyphicon glyphicon-user"></span><span class="optionsBtn glyphicon glyphicon-cog"></span></div>
+		<div><span id="confirmedYou" class="confirmed">N/A</span>, klasa: <span id="confirmedClass" class="confirmed">N/A</span>, numer: <span id="confirmedNumber" class="confirmed">N/A</span></div>
+		<div id="inputBox" class="col-xs-10 col-xs-offset-1"></div>
+		<div class="col-xs-6 btn btn-outline btn-warning btn-lg btn-flex" style="margin-top: 10px; margin-bottom: 10px;" id="sendBtn">WYŚLIJ <span class="glyphicon glyphicon-send"></span></div>
+		<div class="col-xs-6 btn btn-outline btn-success btn-lg btn-flex authorizeBtn" style="margin-top: 10px; margin-bottom: 10px;">AUTORYZUJ <span class="glyphicon glyphicon-lock"></span></div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="1">1</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="2">2</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="3">3</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="4">4</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="5">5</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="6">6</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="7">7</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="8">8</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="9">9</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="/">/</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value="0">0</div>
+			<div class="col-xs-4 btn btn-default btn-lg sendable" value=".">.</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8 btn btn-default sendable" value="-">-</div>
+			<div class="col-xs-4 btn btn-success btn-flex sendable" value="C"><b>C</b> <span class="glyphicon glyphicon-arrow-left"></span></div>
+		</div>
+		<br>
+		<div class="alert alert-info">
+			Korzystając z tej aplikacji akceptujesz politykę cookies
+		</div>
+	</div>
+
+	<div id="mimicWrapper" class="col-xs-12 text-center hide">
+		<div class="optionsFlex"><span class="userBtn glyphicon glyphicon-user"></span><span class="optionsBtn glyphicon glyphicon-cog"></span></div>
+		<div><span id="confirmedYou" class="confirmed">N/A</span>, klasa: <span id="confirmedClass" class="confirmed">N/A</span>, numer: <span id="confirmedNumber" class="confirmed">N/A</span></div>
+		<hr>
+		<div class="col-xs-5 btn btn-outline btn-success btn-lg btn-block btn-flex authorizeBtn">AUTORYZUJ <span class="glyphicon glyphicon-lock"></span></div><br><br>
+		<hr>
+		<div id="mimicWaitingForData" class="hide">
+			<h2>Czekam na dane . . .</h2>
+			<img src="./animal.gif" style="pointer-events: none;">
+		</div>
+		<div id="mimicQuizBox" class="hide">
+			<h3>Pytanie <span id="idPytania">N/A</span>:</h3>
+			<div id="mimicQuizBoxQuestion" class="mimicQuizBoxBorder col-xs-12">N/A</div><br>
+			<h3 style="margin-bottom: 25px; margin-top: 25px;">Odpowiedzi:</h3>
+			<div id="mimicQuizBoxAnswer1" class="mimicQuizBoxAnswer mimicQuizBoxBorder col-xs-12">N/A</div><br>
+			<div id="mimicQuizBoxAnswer2" class="mimicQuizBoxAnswer mimicQuizBoxBorder col-xs-12">N/A</div><br>
+			<div id="mimicQuizBoxAnswer3" class="mimicQuizBoxAnswer mimicQuizBoxBorder col-xs-12">N/A</div><br>
+			<div id="mimicQuizBoxAnswer4" class="mimicQuizBoxAnswer mimicQuizBoxBorder col-xs-12">N/A</div><br>
+		</div>
+		<div id="afterMimicResults" class="hide">
+			<h2><span id="afterMimicResultsName"></span><span id="afterMimicResultsScore" style="color: greenyellow; font-size: 1.6em;"></span></h2>
+		</div>
+	</div>
+
+	<div id="selfQuizWrapper" class="col-xs-12 text-center hide">
+		<div class="optionsFlex"><span class="userBtn glyphicon glyphicon-user"></span><span class="optionsBtn glyphicon glyphicon-cog"></span></div>
+		<div><span id="confirmedYou" class="confirmed">N/A</span>, klasa: <span id="confirmedClass" class="confirmed">N/A</span>, numer: <span id="confirmedNumber" class="confirmed">N/A</span></div>
+		<hr>
+		<div class="col-xs-5 btn btn-outline btn-success btn-lg btn-block btn-flex authorizeBtn">AUTORYZUJ <span class="glyphicon glyphicon-lock"></span></div><br><br>
+		<hr>
+		<h1>Hi!</h1>
+	</div>
+
+	<div id="userModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<div class="modal-content text-center">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">TWOJE DANE</h4>
+		  </div>
+		  <div class="modal-body">
+			Imię i nazwisko: <kbd id="kbdYou"></kbd><br>
+			Klasa: <kbd id="kbdClass"></kbd><br>
+			Numer: <kbd id="kbdNumber"></kbd><br>
+			<hr>
+			ID urządzenia: <kbd id="kbdDeviceId"></kbd><br>
+			Adres IP: <kbd id="kbdIP"></kbd><br>
+			Oprogramowanie: <kbd id="kbdSoftware"></kbd>
+		  </div>
+		</div>
+
+	  </div>
+	</div>
+
+	<div id="optionsModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<div class="modal-content text-center">
+		  <div class="modal-header">
+			<button type="button" class="close declineDeletingCookies" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">USTAWIENIA</h4>
+		  </div>
+		  <div class="modal-body">
+			<div id="upperSettings">
+				<div class="switchDivFlex">
+					<span>Naśladuj aplikacje główną</span>
+					<label class="switch">
+						<input type="checkbox" class="settingsCheckbox" name="mimicMainApp">
+						<div class="slider round" name="mimicMainApp"></div>
+					</label>
+				</div>
+				<div class="switchDivFlex">
+					<span>Tryb kartkówki</span>
+					<label class="switch">
+						<input type="checkbox" class="settingsCheckbox" name="selfQuizingMode">
+						<div class="slider round" name="selfQuizingMode"></div>
+					</label>
+				</div>
+			</div>
+			<hr>
+			<button id="reloadQuestionBtn" type="button" class="btn btn-warning btn-block btn-flex">RELOAD <span class="glyphicon glyphicon-refresh"></span></button>
+			<button id="deleteCookiesBtn" type="button" class="btn btn-danger btn-block btn-flex">USUŃ CIASTKA <span class="glyphicon glyphicon-remove-circle"></span></button>
+			<div id="deleteCookiesConfirmationBox" class="hide">
+				<h3 style="margin-top: 10px;">Czy napewno chcesz usunąć ciastka?<br><small style="font-size: 0.7em;">Po usunięciu ciastek, aplikacja nie będzie działać prawidłowo do czasu ponownego ustawienia identyfikatora!</small></h3>
+				<div class="row">
+					<div class="col-xs-6">
+						<button id="confirmDeletingCookies" type="button" class="btn btn-danger btn-block btn-flex">TAK <span class="glyphicon glyphicon-ok"></span></button>    
+					</div>
+					<div class="col-xs-6">
+						<button id="declineDeletingCookies" type="button" class="btn btn-success btn-block btn-flex declineDeletingCookies">NIE <span class="glyphicon glyphicon-remove"></span></button>    
+					</div>
+				</div>
+			</div>
+		  </div>
+		</div>
+
+	  </div>
+	</div>
+</body>
+</html>

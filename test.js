@@ -96,11 +96,15 @@ function main(appId) {
 		res.sendFile(__dirname+"/Public/index.html");
 	});
   app.get("/emulator", function (req,res) {
-    res.sendFile(__dirname+"/Emulator/index.html");
+    res.sendFile(__dirname+"/Public/emulator.html");
+  });
+
+  app.get("/emulator", function (req,res) {
+    res.sendFile(__dirname+"/Public/test.html");
   });
 
   app.get("/smartphones", function (req,res) {
-  	res.sendFile(__dirname+"/Emulator/smartphones.html");
+  	res.sendFile(__dirname+"/Public/smartphones.html");
   });
 
   app.post("/smartphoneSetCookiesAndStudents", function (req, res) {
@@ -296,6 +300,11 @@ function main(appId) {
 		socket.on('quizIsFinished', function (bool, json) {
 			io.emit('quizIsFinished', bool, json);
 		});
+    socket.on('testIsReady', function (json) {
+      var files = loadQuestionsFromFiles();
+      var groups = [];
+      //lecim dalej...
+    });
 	});
 
 

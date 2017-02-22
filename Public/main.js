@@ -133,6 +133,7 @@ $(document).ready(function() {
 		console.log(json);
 	  	smartphoneQuizGroups = 0;
 	  	$("#smartphoneQuizGroupsBox").empty();
+	  	socket.emit('testIsReady', json);
 	  	/*
 			zrobic cos takiego, ze po wcisnieciu autoryzuj na ekranie aplikacji pojawi sie imie, nazwisko, klasa, numer oraz kod
 			@kod ma byc chyba tylko liczbowy bo latwo wymowic i albo kod bedzie danego koloru lub obok niego bedzie kwadrat z kolorem
