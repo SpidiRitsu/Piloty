@@ -33,6 +33,7 @@ $(document).ready(function() {
 			$("#afterMimicResults").removeClass('hide');                  
 		}
 	});
+	socket.on('testIsReady')
 	$.post('/smartphoneSetCookiesAndStudents', function (json) {
 		students = json['students'];
 		if(json['user'] !== undefined) {
@@ -183,7 +184,9 @@ $(document).ready(function() {
 	$("#reloadQuestionBtn").click(function() {
 		reloadQuestion();
 	});
-
+	$("#askForTestBtn").click(function() {
+		askForTest();
+	});
 
 	$(".mimicQuizBoxAnswer").click(function(e) {
 		let code;
@@ -269,6 +272,12 @@ $(document).ready(function() {
 			}
 		});
 	};
+
+	function askForTest() {
+		$.post('/smartphoneAskForTest', function (json) {
+			//zrobic
+		});
+	}
 
 	function updateSettings(setting, value) {
 		if (setting !== undefined && value !== undefined) {

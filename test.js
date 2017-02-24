@@ -11,10 +11,10 @@ function readQuestions() {
 	fs.readdir(__dirname+"/Saves", function (err, files) {
 		if (err) return console.log(err);
 		files.forEach(function(file) {
-			console.log(file);
+			// console.log(file);
 			questions[file.slice(0,file.length-4)] = fs.readFileSync(__dirname+"/Saves/"+file, "utf-8").split("\r\n"); //ZMIENIC NA LINUXIE NA \n
 		});
-		console.log(questions);
+		// console.log(questions);
 	});
 }
 
@@ -82,6 +82,7 @@ function main(appId) {
   	var cookieParser = require('cookie-parser');
 
   	var currentQuestion;
+    var currentTest;
   	var connectedRemotes = {};
 
   app.use(cookieParser("secret?"));
@@ -162,12 +163,12 @@ function main(appId) {
   		json = JSON.parse(req.signedCookies['settings']);
   	if (typeof(setting) === 'object' && typeof(value) === 'object') {
   		for(let i=0; i<setting.length; i++) {
-  			console.log(setting[i], value[i]);
+  			// console.log(setting[i], value[i]);
   			json[setting[i]] = value[i];
   		}
   	}
-  	console.log('updated settings:');
-  	console.log(json);
+  	// console.log('updated settings:');
+  	// console.log(json);
   	res.cookie('settings', JSON.stringify(json), {signed: true});
   	res.end();
   });
@@ -175,8 +176,8 @@ function main(appId) {
   app.post('/smartphoneReadSettings', function (req, res) {
   	let cookies = new Promise(resolve => resolve(req.signedCookies));
   	cookies.then(cookies => {
-  		console.log('read settings:');
-  		console.log(JSON.parse(cookies['settings']));
+  		// console.log('read settings:');
+  		// console.log(JSON.parse(cookies['settings']));
   		res.send(JSON.parse(cookies['settings']));
   	});
   });
@@ -239,7 +240,7 @@ function main(appId) {
     var file = req.body.file;
     // console.log(req.body);
     // console.log(req.body.question);
-    console.log(file, question);
+    // console.log(file, question);
     appendQuestion(file, question);
     // res.writeHead(200, {"Content-Type": "application/json"});
     // res.json(question);
@@ -284,9 +285,9 @@ function main(appId) {
 	});
 
 	io.on("connection", function(socket) {
-		console.log("someone connected");
+		// console.log("someone connected");
 		socket.on("disconnect", function() {
-			console.log("someone DISCONNECTED");
+			// console.log("someone DISCONNECTED");
 		});
 		socket.on("send question to device", function(index, question, remotes) {
 			currentQuestion = {index: index, question: question};
@@ -303,7 +304,14 @@ function main(appId) {
     socket.on('testIsReady', function (json) {
       var files = loadQuestionsFromFiles();
       var groups = [];
-      //lecim dalej...
+      var temp = json;
+      for(var key in json) {
+        delete temp[key]['plik'];
+        json[key]['content'] = files[json[key]['plik']];
+        //content nie dziala nie wiem czemu???
+        groups.push(temp);
+      }
+      console.log(temp[0]);
     });
 	});
 
