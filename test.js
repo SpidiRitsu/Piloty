@@ -188,9 +188,10 @@ function main(appId) {
   	var smartphoneCode = req.body.code;
   	if (cookies['appId'] === appId) {
   		emulateRemoteFromSmartphone(smartphoneId, smartphoneCode);
+      res.end();
   	}
   	else {
-  		res.status(500);
+  		res.end();
   	}
   });
 
@@ -306,12 +307,11 @@ function main(appId) {
       var groups = [];
       var temp = json;
       for(var key in json) {
-        delete temp[key]['plik'];
         json[key]['content'] = files[json[key]['plik']];
-        //content nie dziala nie wiem czemu???
+        delete temp[key]['plik'];
         groups.push(temp);
       }
-      console.log(temp[0]);
+      currentTest = temp;
     });
 	});
 

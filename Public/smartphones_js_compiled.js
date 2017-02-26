@@ -29,9 +29,10 @@ $(document).ready(function () {
 			$("#mimicQuizBox").addClass('hide');
 			$("#mimicWaitingForData").addClass('hide');
 			$("#afterMimicResults").removeClass('hide');
+			$("#sendBtn").attr('disabled', true);
 		}
 	});
-	socket.on('testIsReady');
+	// socket.on('testIsReady')
 	$.post('/smartphoneSetCookiesAndStudents', function (json) {
 		students = json['students'];
 		if (json['user'] !== undefined) {
@@ -89,18 +90,19 @@ $(document).ready(function () {
 	});
 	$(".authorizeBtn").click(function (e) {
 		if (e.target.attributes['disabled'] === undefined) {
-			$.post("/smartphoneSendCode", { 'code': './' + $("#confirmedNumber").text() }, function (err) {
-				if (err) throw err;
-			});
+			$.post("/smartphoneSendCode", { 'code': './' + $("#confirmedNumber").text() });
 			if (e.target.parentElement.id === 'mimicWrapper' && $('.waitingForData').hasClass('hide')) {
 				$(".waitingForData").removeClass('hide');
 			}
 		}
 	});
 	$(".btn.sendable").click(function (e) {
-		var value = e.target.attributes['value'].value;
-		console.log($(this));
-		console.log(value);
+		var value = void 0;
+		if (e.target.attributes['value'] === undefined) {
+			value = e.target.parentElement.attributes['value'].value;
+		} else {
+			value = e.target.attributes['value'].value;
+		}
 		var inputBox = $("#inputBox").text();
 		switch (value) {
 			case "C":
@@ -250,6 +252,7 @@ $(document).ready(function () {
 			$("#mimicQuizBox").addClass('hide');
 			$("#mimicWaitingForData").addClass('hide');
 			$("#afterMimicResults").addClass('hide');
+			location.reload();
 		}
 	}
 

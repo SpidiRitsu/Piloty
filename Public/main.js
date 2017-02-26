@@ -263,7 +263,7 @@ $(document).ready(function() {
 		doNotShowNextQuestion = false;
 		$("#showScoreboardAfterEachQuestionButton").click();
 	  }
-	}
+	} 
   });
   // QUIZ:
   $("#loadQuizSelectList").click(function() {
@@ -477,8 +477,8 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 	  tempShowScoreboardAfterEachQuestion = false;
 	  if (index === file.length) {
 		quizIsFinished = true;
-		let points = {};
-		for(let key in remotesInQuiz) {
+		var points = {};
+		for(var key in remotesInQuiz) {
 		  points[key] = Math.ceil(remotesCorrectAnswers[key]["points"] / index * 100);
 		}
 		socket.emit('quizIsFinished', quizIsFinished, {
@@ -495,7 +495,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 	  }
 	  else if (showScoreboardAfterEachQuestion) {
 		doNotShowNextQuestion = true;
-		$("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po pytaniu: <span style='color: greenyellow; font-size: 1.3em'>" + quizIndex +"</span><br><button id='showScoreboardAfterEachQuestionButton' type='button' class='btn btn-primary btn-lg' onclick='loadQuestionAndAnswersFromQuizANDreloadVoters();'>następne pytanie (spacebar)</button></h1><hr>");
+		$("#resultsAfterQuiz").empty().html("<h1>Wyniki Quizu po pytaniu: <span style='color: greenyellow; font-size: 1.3em'>" + quizIndex +"</span><br><button id='showScoreboardAfterEachQuestionButton' type='button' class='btn btn-primary btn-lg hide' onclick='loadQuestionAndAnswersFromQuizANDreloadVoters()'>następne pytanie (spacebar)</button></h1><hr>");
 	  }
 	  $("#resultsAfterQuiz").removeClass("hide");
 	  // for(let i=0; i<sessionAnswers.length; i++) {
@@ -528,24 +528,52 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 		}
 	  }
 	  console.log(quizingStudents);
-	  for(var i=0; i<quizingStudents.length; i++) {
-		var temp = "uzyskał/a";
-		if(students[selectedClass][quizingStudents[i]] !== undefined) {
-		  if (students[selectedClass][quizingStudents[i]].split(' ')[0].slice(-1) === 'a')
-			temp = "uzyskała";
-		  else
-			temp = "uzyskał";
-		}
-		if(showSurvey && quizIsFinished) { //koniec ankiety
-		  $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>) (ANKIETA): <span class="resultCorrectAnswerForQuestionSpan">' + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + '%</span><br><br></div>');
+	  if (!showSurvey) {
+		  for(var i=0; i<quizingStudents.length; i++) {
+			var temp = "uzyskał/a";
+			if(students[selectedClass][quizingStudents[i]] !== undefined) {
+			  if (students[selectedClass][quizingStudents[i]].split(' ')[0].slice(-1) === 'a')
+				temp = "uzyskała";
+			  else
+				temp = "uzyskał";
+			}
+		  	$("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>): <span class="resultCorrectAnswerForQuestionSpan">' + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + '%</span><br><br></div>');
+			console.log(`${remotesCorrectAnswers[pilotsSorted[i]]["points"]} / ${index} = ${Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100)}% | ${remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100}%`)
+		  }
+	  }
+	  else {
+	  	console.log(`quiz is finished: ${quizIsFinished}`);
+	  	if(showSurvey && quizIsFinished) { //koniec ankiety
+	  		console.log('TOTALLY TRUE!');
+	  		var allAnswers = [0, 0, 0, 0];
+	  		var sum =0;
+	  		for(var i=0; i<sessionAnswers.length; i++) {
+				for(var j=0; j<4; j++) {
+					sum += sessionAnswers[i][j];
+					allAnswers[j] += sessionAnswers[i][j];
+				}
+			}
+			console.log(`sum: ${sum}`);
+			console.log(`all answers: ${allAnswers}`);
+			console.log(allAnswers);
+			for(var i=0; i<4; i++) {
+				$("#resultsAfterQuiz").append(`<div class="col-xs-12 col-md-12">Na odpowiedź <span class="resultCorrectAnswerForQuestionSpan">${i+1}</span> odpowiedzi udzieliło <span class="resultCorrectAnswerForQuestionSpan">${Math.round((allAnswers[i] / sum) * 100)}%</span> osób</div>`);
+			}
+		  
 		}
 		else if(showSurvey && !quizIsFinished) { //w trakcie ankiety
-		  $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>) (ANKIETA): <span class="resultCorrectAnswerForQuestionSpan">' + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + '%</span><br><br></div>');
+			console.log('TOTALLY FALSE!');
+			var sum = 0;
+			console.log(sessionAnswers);
+			console.log(`index: ${index}`);
+			for(var i=0; i<4; i++) {
+				sum += sessionAnswers[index-1][i];
+			}
+			console.log(`sum: ${sum}`);
+			for(var i=0; i<4; i++) {
+				$("#resultsAfterQuiz").append(`<div class="col-xs-12 col-md-12">Na odpowiedź <span class="resultCorrectAnswerForQuestionSpan">${i+1}</span> odpowiedzi udzieliło <span class="resultCorrectAnswerForQuestionSpan">${Math.round((sessionAnswers[index-1][i]/sum) * 100)}%</span> osób</div>`);
+			}
 		}
-		else {
-		  $("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>): <span class="resultCorrectAnswerForQuestionSpan">' + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + '%</span><br><br></div>');
-		}
-		console.log(`${remotesCorrectAnswers[pilotsSorted[i]]["points"]} / ${index} = ${Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100)}% | ${remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100}%`)
 	  }
 
 	}
