@@ -324,6 +324,7 @@ $(document).ready(function() {
 	socket.emit('everyone_connected', false, remotesInQuiz);
   });
   $("#loadQuizingDevicesStartQuiz").click(function() {
+  	timer();
 	everyone_connected = true;
 	socket.emit('send question to device', 1, unfilteredSelectedFile[0], remotesInQuiz);
 	console.log(remotesInQuiz);
@@ -579,6 +580,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 	}
 	else {
 	  if (!doNotShowNextQuestion) {
+	  	timer();
 		quizIndex++;
 		console.log(unfilteredSelectedFile);
 		socket.emit('send question to device', quizIndex, unfilteredSelectedFile[index], remotesInQuiz);
@@ -653,7 +655,7 @@ function loadQuestionsFromFiles() {
   });
 }
 
-function timer(duration) {
+/*function timer(duration) {
   var timer = parseInt(duration)*60;
   var minutes;
   var seconds;
@@ -667,6 +669,21 @@ function timer(duration) {
 	  alert("Timer stopped!");
 	  clearInverval(timerId); ///CZEMU TO NIE DZIALA?????
 	}
+  }, 1000);
+}*/
+
+function timer() {
+  clearInterval(timerId);
+  var timer = 1;
+  var minutes, seconds;
+  $("#questionQuizTimer").text("00:00");
+  timerId = setInterval(function() {
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	seconds = seconds < 10 ? "0" + seconds : seconds;
+    ++timer;
+    $("#questionQuizTimer").text(minutes + ":" + seconds);
   }, 1000);
 }
 

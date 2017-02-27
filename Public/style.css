@@ -14,13 +14,17 @@
   font-family: "Russo One";
   src: url(./fonts/Russo_One/RussoOne-Regular.ttf) format('truetype');
 }
+@font-face {
+  font-family: "Dosis";
+  src: url(./fonts/Dosis/Dosis-Regular.ttf) format('truetype');
+}
 
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Bungee', cursive;
+  font-family: 'Dosis', sans-serif;
   color: #fff;
   overflow: hidden; /*Usuwa scrollbar*/
   /* smieszki */
@@ -260,7 +264,7 @@ input {
   border: 12px solid #fff;
   border-radius: 12px;
   margin-top: 30px;
-  margin-bottom: 50px;
+  /*margin-bottom: 50px;*/
   height: auto;
   overflow: hidden;
 }
@@ -325,4 +329,7 @@ input {
 #smartphoneQuizGroupsBox {
   font-family: 'Russo One', sans-serif;
   font-size: 18px;
+}
+#questionQuizTimer {
+  margin-bottom: 15px;
 }
