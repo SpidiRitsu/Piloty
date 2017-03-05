@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "start": "node index.js",
-    "server": "node windowsTesting.js"
+    "babel": "babel ./Public/smartphones_js.js -w -o ./Public/smartphones_js_compiled.js",
+    "start": "node --use_strict index.js",
+    "server": "node --use_strict windowsTesting.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,6 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "opn": "^4.0.2",
-    "robotjs": "^0.4.5",
     "shortid": "^2.2.6",
     "socket.io": "^1.7.1",
     "usb": "^1.2.0",
