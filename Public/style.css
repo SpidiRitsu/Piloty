@@ -333,3 +333,6 @@ input {
 #questionQuizTimer {
   margin-bottom: 15px;
 }
+.votedUserPhysicalRemotes {
+  color: cyan;
+}

@@ -226,6 +226,12 @@ function main(appId) {
   	} 
   });
 
+  app.post('/savedResults', function(req, res) {
+    var results = JSON.parse(req.body.results);
+    // fs.writeFile('/')   //dokonczyc
+    res.end();
+  });
+
   app.post("/emulatorSendCode", function(req, res) {
     var remoteId = req.body.id;
     var remoteCode = req.body.code;

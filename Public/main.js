@@ -402,7 +402,7 @@ $(document).ready(function() {
 			else if(code === remotesKey)
 			  sessionAnswers[quizIndex-1][correctAnswerForCurrentQuestion-1]++;
 			console.log(sessionAnswers[quizIndex-1]);
-			if(code === selectedQuiz[quizIndex-1][5] || code === remotesKey) {
+			if(parseInt(code) === parseInt(selectedQuiz[quizIndex-1][5]) || code === remotesKey) {
 				// sessionCorrectAnswers[quizIndex-1]++;
 				sessionCorrectAnswers[quizIndex-1].push(pilotId);
 				remotesCorrectAnswers[pilotId]["points"]++;
@@ -459,10 +459,26 @@ function reloadVoters(voters) {
 	$("#votedUser"+(k+1)).removeClass("hide");
   }*/
   var temp = Object.keys(remotesInQuiz).sort(function(a,b){return remotesInQuiz[a]-remotesInQuiz[b]});
+  var physicalRemotes = [
+  	'1796',
+  	'1c08',
+  	'1aef',
+  	'177d',
+  	'19f0',
+  	'11d3',
+  	'19c4',
+  	'13d5',
+  	'1c52',
+  	'19e7'
+  ];
   //http://stackoverflow.com/questions/1069666/sorting-javascript-object-by-property-value
   for(var i=0; i<temp.length; i++) {
+
 	$("#votedUser"+temp[i]).remove();
-	$("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+temp[i]+'">'+remotesInQuiz[temp[i]]+'</div>');
+	if(physicalRemotes.indexOf(temp[i]) !== -1)
+		$("#alreadyVotedBox").append('<div class="col-xs-1 votedUserPhysicalRemotes" id="votedUser'+temp[i]+'">'+remotesInQuiz[temp[i]]+'</div>');
+	else
+		$("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+temp[i]+'">'+remotesInQuiz[temp[i]]+'</div>');
 	$("#votedUser"+temp[i]).removeClass("hide");
   }
 }
@@ -530,6 +546,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 	  }
 	  console.log(quizingStudents);
 	  if (!showSurvey) {
+	  	var savedResults = [];
 		  for(var i=0; i<quizingStudents.length; i++) {
 			var temp = "uzyskał/a";
 			if(students[selectedClass][quizingStudents[i]] !== undefined) {
@@ -540,7 +557,10 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 			}
 		  	$("#resultsAfterQuiz").append('<div class="col-xs-12 col-md-12">' + students[selectedClass][quizingStudents[i]] + ' (<span class="resultStudentsNumber">' + quizingStudents[i] + '</span>): <span class="resultCorrectAnswerForQuestionSpan">' + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + '%</span><br><br></div>');
 			console.log(`${remotesCorrectAnswers[pilotsSorted[i]]["points"]} / ${index} = ${Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100)}% | ${remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100}%`)
+		  	savedResults.push(students[selectedClass][quizingStudents[i]] + " (" + quizingStudents[i] + "): " + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + "%");
 		  }
+		 // $.post('/savedResults', {savedResults: JSON.stringify(savedResults)});
+		 $.post('/savedResults', {results: JSON.stringify(savedResults)});
 	  }
 	  else {
 	  	console.log(`quiz is finished: ${quizIsFinished}`);
