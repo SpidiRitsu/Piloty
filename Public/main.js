@@ -475,7 +475,7 @@ function reloadVoters(voters) {
   for(var i=0; i<temp.length; i++) {
 
 	$("#votedUser"+temp[i]).remove();
-	if(physicalRemotes.indexOf(temp[i]) !== -1)
+	if(physicalRemotes.indexOf(temp[i]) === -1)
 		$("#alreadyVotedBox").append('<div class="col-xs-1 votedUserPhysicalRemotes" id="votedUser'+temp[i]+'">'+remotesInQuiz[temp[i]]+'</div>');
 	else
 		$("#alreadyVotedBox").append('<div class="col-xs-1" id="votedUser'+temp[i]+'">'+remotesInQuiz[temp[i]]+'</div>');
@@ -560,7 +560,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 		  	savedResults.push(students[selectedClass][quizingStudents[i]] + " (" + quizingStudents[i] + "): " + Math.ceil(remotesCorrectAnswers[pilotsSorted[i]]["points"] / index * 100) + "%");
 		  }
 		 // $.post('/savedResults', {savedResults: JSON.stringify(savedResults)});
-		 $.post('/savedResults', {results: JSON.stringify(savedResults)});
+		 $.post('/savedResults', {results: JSON.stringify(savedResults), selectedClass: selectedClass});
 	  }
 	  else {
 	  	console.log(`quiz is finished: ${quizIsFinished}`);

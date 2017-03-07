@@ -4,6 +4,7 @@ var fs = require("fs");
 var path = require("path");
 var shortid = require('shortid');
 var validUrl = require('valid-url');
+var moment = require('moment');
 var appId = shortid.generate();
 console.log(appId);
 function readQuestions() {
@@ -228,7 +229,13 @@ function main(appId) {
 
   app.post('/savedResults', function(req, res) {
     var results = JSON.parse(req.body.results);
-    // fs.writeFile('/')   //dokonczyc
+    var selectedClass = req.body.selectedClass;
+    //SELECTED CLASS JEST UNDEFINED
+    var resultsToFile = '';
+    results.forEach(result => {
+      resultsToFile += result + '\n';
+    });
+    fs.writeFile(`./Wyniki/${selectedClass} ${moment().format('L').replace(/\//g, '.')} ${moment().format('LTS')}`, resultsToFile);    
     res.end();
   });
 
