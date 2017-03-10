@@ -235,6 +235,7 @@ function main(appId) {
     results.forEach(result => {
       resultsToFile += result + '\n';
     });
+    // console.log(`${selectedClass} ${moment().format('L').replace(/\//g, '.')} ${moment().format('LTS')}`);
     fs.writeFile(`./Wyniki/${selectedClass} ${moment().format('L').replace(/\//g, '.')} ${moment().format('LTS')}`, resultsToFile);    
     res.end();
   });
