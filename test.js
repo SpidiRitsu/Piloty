@@ -236,7 +236,7 @@ function main(appId) {
       resultsToFile += result + '\n';
     });
     // console.log(`${selectedClass} ${moment().format('L').replace(/\//g, '.')} ${moment().format('LTS')}`);
-    fs.writeFile(`./Wyniki/${selectedClass} ${moment().format('L').replace(/\//g, '.')} ${moment().format('LTS')}`, resultsToFile);    
+    fs.writeFile(`./Wyniki/${selectedClass} ${moment().format('L').replace(/\//g, '-')} ${moment().format('LTS').replace(/:/g, '-')}.txt`, resultsToFile);    
     res.end();
   });
 

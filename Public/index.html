@@ -35,10 +35,10 @@
 		</div>
 	  </div>
 	  <div class="row">
-		<div class="col-md-6 mainMenuSelector1st oneQuarter">
+		<div class="col-xs-6 mainMenuSelector1st oneQuarter">
 		  <div class="mainMenuSelectorText">Quiz</div>
 		</div>
-		<div class="col-md-6 mainMenuSelector2nd oneQuarter"> <!-- klasa underConstruction sprawia ze jest under construction -->
+		<div class="col-xs-6 mainMenuSelector2nd oneQuarter"> <!-- klasa underConstruction sprawia ze jest under construction -->
 		  <!-- <div class="mainMenuSelectorText">Głosowanie</div> -->
 		  <blockquote style="font-size: 25px;" class="text-center">
 		  „Nauka jest jak niezmierne morze. Im więcej jej pijesz, tym bardziej jesteś spragniony.”
@@ -47,10 +47,10 @@
 		</div>
 	  </div>
 	  <div class="row">
-		<div class="col-md-6 mainMenuSelector3rd oneQuarter">
+		<div class="col-xs-6 mainMenuSelector3rd oneQuarter">
 		  <div class="mainMenuSelectorText">Pytania</div>
 		</div>
-		<div class="col-md-6 mainMenuSelector4th oneQuarter">
+		<div class="col-xs-6 mainMenuSelector4th oneQuarter">
 		  <div class="mainMenuSelectorText">Ustawienia</div>
 		</div>
 	  </div>
@@ -63,7 +63,7 @@
 	  <div id="selectQuizWrapper" class="container flexBox">
 		<div id="selectQuizMainBox" class="container text-center">
 		  <h1>Wybierz listę z pytaniami i klasę:</h1>
-		  <div class="col-md-12 text-center container">
+		  <div class="col-xs-12 text-center container">
 			<select id="importQuizSelectList" class="text-center"></select>
 			<select id="importQuizStudentsList" class="text-center"></select>
 			<br>
@@ -85,25 +85,27 @@
 
 	  <div id="quizMainWrapper" class="container text-center hide">
 		<div id="quizMainBox" class="container text-center">
-		  <div id="questionQuizMainBox" class="col-md-12">
+		  <div id="questionQuizMainBox" class="col-xs-12 questionQuizMainBoxBorder">
 			<!-- Tu idzie pytanie -->
 		  </div>
 		  <div id="questionQuizTimer"></div>
-		  <div class="col-md-12">
-			<div id="answer1QuizMainBox" class="col-md-5 answerQuizMainBox">
+		  <div class="col-xs-12">
+			<div id="answer1QuizMainBox" class="col-xs-5 answerQuizMainBox answerQuizMainBoxBorder">
 			  <!-- Tu idzie odpowiedz -->
 			</div>
-			<div id="answer2QuizMainBox" class="col-md-5 col-md-offset-2 answerQuizMainBox">
+			<div id="answer2QuizMainBox" class="col-xs-5 col-xs-offset-2 answerQuizMainBox answerQuizMainBoxBorder">
 			  <!-- Tu idzie odpowiedz -->
 			</div>
-			<div id="answer3QuizMainBox" class="col-md-5 answerQuizMainBox">
+			<div style="clear:both;"></div>
+			<div id="answer3QuizMainBox" class="col-xs-5 answerQuizMainBox answerQuizMainBoxBorder">
 			  <!-- Tu idzie odpowiedz -->
 			</div>
-			<div id="answer4QuizMainBox" class="col-md-5 col-md-offset-2 answerQuizMainBox">
+			<div id="answer4QuizMainBox" class="col-xs-5 col-xs-offset-2 answerQuizMainBox answerQuizMainBoxBorder">
 			  <!-- Tu idzie odpowiedz -->
 			</div>
+			<div style="clear:both;"></div>
 		  </div>
-		  <div id="alreadyVotedBox" class="col-md-12 text-center" style="position: fixed; bottom: 0; left: 0; border: 12px solid #fff; border-bottom: 0px; border-top-left-radius: 12px; border-top-right-radius: 12px; max-height: 92px; background-color: #8fa5f1;">
+		  <div id="alreadyVotedBox" class="col-xs-12 text-center" style="position: fixed; bottom: 0; left: 0; border: 12px solid #fff; border-bottom: 0px; border-top-left-radius: 12px; border-top-right-radius: 12px; max-height: 92px; background-color: #8fa5f1;">
 			<div class="row">
 			  <!-- col-xs-1 - ilosc pilotow -->
 			</div>
@@ -127,13 +129,13 @@
 	  </div>
 	  <div class="answersBox">
 		<div class="row text-center">
-		  <div class="answerBoxAnswer container col-md-4 col-md-offset-1">1) Odpowiedz 1</div>
-		  <div class="answerBoxAnswer container col-md-4 col-md-offset-2">2) Odpowiedz 2 z dwoma
+		  <div class="answerBoxAnswer container col-xs-4 col-xs-offset-1">1) Odpowiedz 1</div>
+		  <div class="answerBoxAnswer container col-xs-4 col-xs-offset-2">2) Odpowiedz 2 z dwoma
 		  linijkami</div>
 		</div>
 		<div class="row">
-		  <div class="answerBoxAnswer container col-md-4 col-md-offset-1">3) Odp 3</div>
-		  <div class="answerBoxAnswer container col-md-4 col-md-offset-2">4) Odp 4</div>
+		  <div class="answerBoxAnswer container col-xs-4 col-xs-offset-1">3) Odp 3</div>
+		  <div class="answerBoxAnswer container col-xs-4 col-xs-offset-2">4) Odp 4</div>
 		</div>
 	  </div>
 	  <div class="timer text-center">
@@ -195,7 +197,7 @@
 			  <div id="collapse1" class="panel-collapse collapse"><!-- dodac clase "in" zeby collapse byl na starcie pokazany -->
 				<div class="panel-body">
 				  <div class="row disabledDiv">
-					<div class="col-md-6 text-center">
+					<div class="col-xs-6 text-center">
 					  <span class="headerForThingsInAccordion">Pytanie</span>
 					  <textarea autocomplete="off"  rows="4" cols="15"></textarea>
 					  <span class="headerForThingsInAccordion">Poprawna odpowiedź</span>
@@ -207,7 +209,7 @@
 					  <br>
 					  <label class="correctAnswerRadio"><input type="radio" name="correctAnswerAccordion" value="4"> Odpowiedź 4</label>
 					</div>
-					<div class="col-md-6">
+					<div class="col-xs-6">
 					  <span class="headerForThingsInAccordion">Odpowiedź 1</span>
 					  <textarea autocomplete="off"  rows="1" cols="15"></textarea>
 					  <span class="headerForThingsInAccordion">Odpowiedź 2</span>
@@ -218,7 +220,7 @@
 					  <textarea autocomplete="off"  rows="1" cols="15"></textarea>
 					</div>
 				  </div>
-				  <div class="col-md-12">
+				  <div class="col-xs-12">
 					<br>
 					<button type="button" class="btn btn-default btn-block btn-lg btn-info russoOne editBtn">Edytuj pytanie</button>
 					<button type="button" class="btn btn-default btn-block btn-lg btn-success russoOne hide">Zapisz</button>
@@ -329,7 +331,7 @@
 			<h1 class="modal-title" id="">Połączonych urządzeń: <span id="loadQuizingDevicesConnectedSpan">0</span>/<span id="loadQuizingDevicesMax">X</span><br><small>Wyślij z pilota kod <kbd>./</kbd> i swój numer z dziennika<br>Przykład: <kbd>./14</kbd> gdy masz numer 14</small></h1>
 		  </div>
 		  <div id="connectedDevices" class="modal-body" style="height: auto !important; overflow: auto !important;">
-			<!-- <div id="connectedDevices" class="text-center col-md-12">THINGS:</div><br> -->
+			<!-- <div id="connectedDevices" class="text-center col-xs-12">THINGS:</div><br> -->
 		  </div>
 		  <div class="modal-footer">
 			<!-- <button id="loadSelectedQuestionList" type="button" class="btn btn-info btn-block btn-lg" data-dismiss="modal">WCZYTAJ</button> -->

@@ -261,21 +261,26 @@ input {
   height: 100vh;
 }
 #questionQuizMainBox {
-  border: 12px solid #fff;
-  border-radius: 12px;
   margin-top: 30px;
   /*margin-bottom: 50px;*/
   height: auto;
   overflow: hidden;
 }
+.questionQuizMainBoxBorder {
+  border: 12px solid #fff;
+  border-radius: 12px;
+}
 .answerQuizMainBox {
   font-size: 0.7em;
-  border: 8px solid #fff;
-  border-radius: 12px;
-  margin-bottom: 50px;
+  margin-bottom: 0px;
   height: auto !important;
   overflow: hidden;
   /*width: auto;*/
+}
+.answerQuizMainBoxBorder {
+  margin-bottom: 50px !important;
+  border: 8px solid #fff;
+  border-radius: 12px;
 }
 /* USTAWIENIA */
 #Ustawienia {

@@ -608,8 +608,28 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 		$("#quizMainBox").removeClass("hide");
 		$("#resultsAfterQuiz").addClass("hide");
 		$("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
+
+		//if sprawdza czy pytanie jest obrazkiem i jezeli jest to usuwa border
+		if($("#questionQuizMainBox").children().hasClass('img-responsive')) {
+		  	$("#questionQuizMainBox").removeClass('questionQuizMainBoxBorder');
+		  }
+		else {
+		  if (!$("#questionQuizMainBox").hasClass('questionQuizMainBoxBorder'))
+		  	$("#questionQuizMainBox").addClass('questionQuizMainBoxBorder');
+		}
+
 		for(var i=1; i<5; i++) {
 		  $("#answer"+i+"QuizMainBox").html(i + ". " + file[index][i]);
+
+		  //if sprawdza czy odpowiedz jest obrazkiem i jezeli jest to usuwa border
+		  if($("#answer"+i+"QuizMainBox").children().hasClass('img-responsive')) {
+		  	$("#answer"+i+"QuizMainBox").removeClass('answerQuizMainBoxBorder');
+		  }
+		  else {
+		  	if (!$("#answer"+i+"QuizMainBox").hasClass('answerQuizMainBoxBorder'))
+		  		$("#answer"+i+"QuizMainBox").addClass('answerQuizMainBoxBorder');
+		  }
+
 		}
 		// console.log(quizIndex + " QUIZ INDEX!!!");
 		correctAnswerForCurrentQuestion = parseInt(file[index][5]);

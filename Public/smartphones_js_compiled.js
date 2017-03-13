@@ -2,6 +2,9 @@
 
 var socket = io();
 var students = void 0;
+var timer = void 0,
+    timerHowLong = 2,
+    isOn = false;
 $(document).ready(function () {
 	socket.on('question', function (json) {
 		confirmId(function () {
@@ -199,6 +202,29 @@ $(document).ready(function () {
 		$.post("/smartphoneSendCode", { 'code': code });
 	});
 
+	$("#mimicQuizBoxH3").on('mousedown', function () {
+		timer = setTimeout(function () {
+			if (isOn) {
+				$("#mimicWaitingForData").removeClass('hide');
+				$("#mimicQuizBox").addClass('hide');
+				$.post("/smartphoneSendCode", { 'code': '4-.-2' });
+			}
+		}, timerHowLong * 1000);
+	}).on('mouseup', function () {
+		clearTimeout(timer);
+	});
+
+	$("#forceRefresh").click(function () {
+		location.reload();
+	}).on('mousedown', function () {
+		timer = setTimeout(function () {
+			isOn = true;
+			$("#daneIp").css('color', 'yellowgreen');
+		}, timerHowLong * 1000);
+	}).on('mouseup', function () {
+		clearTimeout(timer);
+	});;
+
 	function loadUser(username, userclass, usernumber) {
 		$("#chooseClass").addClass('hide');
 		$("#confirmedYou, #kbdYou").text(username);
@@ -219,8 +245,8 @@ $(document).ready(function () {
 
 	function htmlQuestion(json) {
 		$("#idPytania").text(json['index']);
-		$("#mimicQuizBoxQuestion").html(json['question'][0]);
-		for (var i = 1; i < 5; i++) {
+		// $("#mimicQuizBoxQuestion").html(json['question'][0]);
+		for (var i = 0; i < 5; i++) {
 			if (!$('#mimicQuizBoxAnswer' + i).hasClass('mimicQuizBoxBorder')) {
 				$('#mimicQuizBoxAnswer' + i).addClass('mimicQuizBoxBorder');
 			}
@@ -229,7 +255,15 @@ $(document).ready(function () {
 			}
 			json['question'][i] = json['question'][i].replace(/{i}/g, '<img class="img-responsive img-thumbnail" src="');
 			json['question'][i] = json['question'][i].replace(/{I}/g, '">');
-			$('#mimicQuizBoxAnswer' + i).html(json['question'][i]);
+			if (i !== 0) $('#mimicQuizBoxAnswer' + i).html(json['question'][i]);else {
+				$("#mimicQuizBoxQuestion").html(json['question'][i]);
+				if (!$("#mimicQuizBoxQuestion").hasClass('mimicQuizBoxBorder')) {
+					$("#mimicQuizBoxQuestion").addClass('mimicQuizBoxBorder');
+				}
+				if (json['question'][i].indexOf('{i}') !== -1) {
+					$("#mimicQuizBoxQuestion").removeClass('mimicQuizBoxBorder');
+				}
+			}
 		}
 		$("#mimicWaitingForData").addClass('hide');
 		$("#mimicQuizBox").removeClass('hide');
