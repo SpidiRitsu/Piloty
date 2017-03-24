@@ -341,3 +341,6 @@ input {
 .votedUserPhysicalRemotes {
   color: cyan;
 }
+#smartphoneQuizInfoBox {
+  font-size: 24px;
+}

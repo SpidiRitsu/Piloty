@@ -84,6 +84,7 @@ function main(appId) {
 
   	var currentQuestion;
     var currentTest;
+    var currentPassword;
   	var connectedRemotes = {};
 
   app.use(cookieParser("secret?"));
@@ -299,6 +300,21 @@ function main(appId) {
 		res.json(json);
 	});
 
+  app.post("/testIsReady", function (req, res) {
+    var json = req.body.json;
+    var files = loadQuestionsFromFiles();
+    var groups = [];
+    var temp = json;
+    for(var key in json) {
+      json[key]['content'] = files[json[key]['plik']];
+      delete temp[key]['plik'];
+      groups.push(temp);
+    }
+    currentTest = temp;
+    currentPassword = shortid.generate();
+    res.send(currentPassword);
+  });
+
 	io.on("connection", function(socket) {
 		// console.log("someone connected");
 		socket.on("disconnect", function() {
@@ -316,17 +332,6 @@ function main(appId) {
 		socket.on('quizIsFinished', function (bool, json) {
 			io.emit('quizIsFinished', bool, json);
 		});
-    socket.on('testIsReady', function (json) {
-      var files = loadQuestionsFromFiles();
-      var groups = [];
-      var temp = json;
-      for(var key in json) {
-        json[key]['content'] = files[json[key]['plik']];
-        delete temp[key]['plik'];
-        groups.push(temp);
-      }
-      currentTest = temp;
-    });
 	});
 
 

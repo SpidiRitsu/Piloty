@@ -223,8 +223,14 @@ $(document).ready(function() {
 		location.reload();
 	}).on('mousedown', () => {
 		timer = setTimeout(() => {
-			isOn = true;
-			$("#daneIp").css('color', 'yellowgreen');
+			if (!isOn) {
+				isOn = true;
+				$("#daneIp").css('color', 'yellowgreen');
+			}
+			else {
+				isOn = false;
+				$("#daneIp").css('color', 'black');
+			}
 		}, timerHowLong * 1000);
 	}).on('mouseup', () => {
 		clearTimeout(timer);
