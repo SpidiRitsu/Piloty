@@ -341,6 +341,7 @@ $(document).ready(function() {
 	  if(!everyone_connected) {
 		if (code.slice(0,2) === "./" && /^\d+$/.test(code.slice(2))) {
 		  if (!remotesInQuiz.hasOwnProperty(code.slice(2))) {
+		  	fixedRemotesUsed = parseInt($("#loadQuizingDevicesMax").html());
 			if (Object.keys(remotesInQuiz).length == fixedRemotesUsed && remotesInQuiz.hasOwnProperty(pilotId)) {
 			  remotesInQuiz[pilotId] = code.slice(2);
 			  console.log(remotesInQuiz); 
@@ -370,11 +371,16 @@ $(document).ready(function() {
 			  for(var k=0; k<temp.length; k++) {
 				$("#connectedDevices").append('<div class="col-xs-3 connectedDevice" id="connectedDevice'+(k+1)+'">'+remotesInQuiz[temp[k]]+'</div>');
 			  }
-			  if (keysRemotesInQuiz.length == fixedRemotesUsed) {
+			  if (Object.keys(remotesInQuiz).length == fixedRemotesUsed) {
 				$("#loadQuizingDevicesStartQuiz").attr("disabled", false);
 				$("#loadQuizingDevicesStartQuiz").removeClass("btn-danger");
 				$("#loadQuizingDevicesStartQuiz").addClass("btn-success");
 				reloadVoters(fixedRemotesUsed);
+			  }
+			  else {
+			  	$("#loadQuizingDevicesStartQuiz").attr("disabled", true);
+				$("#loadQuizingDevicesStartQuiz").removeClass("btn-success");
+				$("#loadQuizingDevicesStartQuiz").addClass("btn-danger");
 			  }
 			}
 		  }
@@ -611,7 +617,7 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 		$("#Quiz").css("overflow", "hidden");
 		$("#quizMainBox").removeClass("hide");
 		$("#resultsAfterQuiz").addClass("hide");
-		$("#questionQuizMainBox").html(quizIndex + ". " + file[index][0]);
+		$("#questionQuizMainBox").html(quizIndex + " . " + file[index][0]);
 
 		//if sprawdza czy pytanie jest obrazkiem i jezeli jest to usuwa border
 		if($("#questionQuizMainBox").children().hasClass('img-responsive')) {
@@ -623,7 +629,11 @@ function loadQuestionAndAnswersFromQuiz(file, index, nextQuestion) {
 		}
 
 		for(var i=1; i<5; i++) {
-		  $("#answer"+i+"QuizMainBox").html(i + ". " + file[index][i]);
+		  $("#answer"+i+"QuizMainBox").html(i + " . " + file[index][i]);
+		  if (file[index][i] == "-")
+		  	$("#answer"+i+"QuizMainBox").addClass("hide");
+		  else
+		  	$("#answer"+i+"QuizMainBox").removeClass("hide");
 
 		  //if sprawdza czy odpowiedz jest obrazkiem i jezeli jest to usuwa border
 		  if($("#answer"+i+"QuizMainBox").children().hasClass('img-responsive')) {
@@ -697,6 +707,36 @@ function loadQuestionsFromFiles() {
 	  filesWithContent = false;
 	}
   });
+}
+
+function increaseMaxDevices() {
+	var current = parseInt($("#loadQuizingDevicesMax").html());
+	$("#loadQuizingDevicesMax").html(++current);
+	fixedRemotesUsed = ++current;
+	$("#loadQuizingDevicesStartQuiz").attr("disabled", true);
+	$("#loadQuizingDevicesStartQuiz").removeClass("btn-success");
+	$("#loadQuizingDevicesStartQuiz").addClass("btn-danger");
+}
+
+function decreaseMaxDevices() {
+	var current = parseInt($("#loadQuizingDevicesMax").html());
+	if (current > 0) {
+		$("#loadQuizingDevicesMax").html(current - 1);
+		fixedRemotesUsed = current - 1;
+		if ($("#loadQuizingDevicesConnectedSpan").html() == current) {
+			for(var i=0; i<$(".connectedDevice").length; i++) {
+				if (remotesInQuiz[Object.keys(remotesInQuiz).pop()] == $(".connectedDevice")[i].innerHTML)
+					$(".connectedDevice")[i].remove();
+			}
+			delete remotesInQuiz[Object.keys(remotesInQuiz)[Object.keys(remotesInQuiz).length-1]];
+			$("#loadQuizingDevicesConnectedSpan").html(Object.keys(remotesInQuiz).length);
+		}
+	}
+	if($("#loadQuizingDevicesConnectedSpan").html() == $("#loadQuizingDevicesMax").html()) {
+		$("#loadQuizingDevicesStartQuiz").attr("disabled", false);
+		$("#loadQuizingDevicesStartQuiz").removeClass("btn-danger");
+		$("#loadQuizingDevicesStartQuiz").addClass("btn-success");
+	}
 }
 
 /*function timer(duration) {

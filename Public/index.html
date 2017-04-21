@@ -331,7 +331,12 @@
 		<div class="modal-content" style="width: 100vw !important; height: 100vh !important;">
 		  <div class="modal-header">
 			<!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
-			<h1 class="modal-title" id="">Połączonych urządzeń: <span id="loadQuizingDevicesConnectedSpan">0</span>/<span id="loadQuizingDevicesMax">X</span><br><small>Wyślij z pilota kod <kbd>./</kbd> i swój numer z dziennika<br>Przykład: <kbd>./14</kbd> gdy masz numer 14</small></h1>
+			<h1 class="modal-title" id="">Połączonych urządzeń: <span id="loadQuizingDevicesConnectedSpan">0</span>/<span id="loadQuizingDevicesMax">X</span>
+			<div class="btn-group">
+				<button type="button" class="btn btn-success" onclick="increaseMaxDevices()">+</button>
+				<button type="button" class="btn btn-danger" onclick="decreaseMaxDevices()">-</button>
+			</div>
+			<br><small>Wyślij z pilota kod <kbd>./</kbd> i swój numer z dziennika<br>Przykład: <kbd>./14</kbd> gdy masz numer 14</small></h1>
 		  </div>
 		  <div id="connectedDevices" class="modal-body" style="height: auto !important; overflow: auto !important;">
 			<!-- <div id="connectedDevices" class="text-center col-xs-12">THINGS:</div><br> -->
